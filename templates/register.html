@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/register.css" type = "text/css">
+    <title>Register</title>
+</head>
+<body>
+    <div class="col-md-10 mx-auto col-lg-5 centre">
+        <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" method="post" action="/register">
+          <div class="form-floating mb-3">
+            <label for="floatingInput">Username</label>
+            <input type="text" class="form-control" name="username" id="floatingInput" placeholder="Username">
+            </div>
+            <br>
+          <div class="form-floating mb-3">
+            <label for="floatingPassword">Password</label>
+            <input type="password" class="form-control" name = "password" id="floatingPassword" placeholder="Password">
+          </div><br>
+          <div class="form-floating mb-3">
+            <label for="floatingPassword">Confirm Password</label>
+            <input type="password" class="form-control" name = "confirmpassword" id="floatingPassword" placeholder="Password">
+          </div><br>
+          {{if ne .Msg ""}}
+          {{if ne .Msg "Registered Successfully"}}
+            <div class="alert alert-warning" role="alert">
+              {{ .Msg }}
+            </div>
+            {{ end}}
+          {{if eq .Msg "Registered Successfully"}}
+            <div class="alert alert-warning" role="alert">
+              {{ .Msg }}
+            </div>
+          {{end}}
+          {{end}}
+          <button class="w-100 btn btn-lg btn-primary" type="submit" value = "Sign Up">Register</button>
+          {{if eq .Msg "Registered Successfully"}}
+           <a href = "login"><button type="button" class="btn btn-outline-secondary btn-lg px-4">Login</button></a> 
+         {{end}}
+          <hr class="my-4">
+          <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+        </form>
+      </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+ </body>
+ </html>   
