@@ -81,3 +81,40 @@ func Deletebook(w http.ResponseWriter, r *http.Request){
 		t.Execute(w,error)
 	
 }
+
+func Admincheckout(w http.ResponseWriter, r *http.Request){
+	requestedbooks := models.Requestedbooks()
+	t := views.Admincheckout()
+	t.Execute(w,requestedbooks)
+}
+
+func Approvecheckout(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("requestids")
+	models.Approvecheckout(	Id)
+	Admincheckout(w,r)
+}
+
+func Denycheckout(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("requestids")
+	models.Denycheckout(Id)
+	Admincheckout(w,r)
+}
+
+func Admincheckin(w http.ResponseWriter, r *http.Request){
+	checkedinbooks := models.Checkedinbooks()
+	t := views.Admincheckin()
+	t.Execute(w,checkedinbooks)
+
+}
+
+func Approvecheckin(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("requestids")
+	models.Approvecheckin(Id)
+	Admincheckin(w,r)
+}
+
+func Denycheckin(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("requestids")
+	models.Denycheckin(Id)
+	Admincheckin(w,r)
+}

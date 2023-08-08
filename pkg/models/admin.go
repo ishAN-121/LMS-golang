@@ -63,3 +63,126 @@ func Deletebook(title,author string , copies int) types.Error{
 		return error
 	}
 }
+
+
+func Requestedbooks() types.RequestLists{
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "SELECT id,username,bookId FROM requests WHERE status = 'requested'"
+	var requests []types.Request
+
+	rows , err := db.Query(query)
+	if err != nil {
+		log.Println(err)
+	}
+	for rows.Next() {
+		var request types.Request
+		err := rows.Scan(&request.Id , &request.Username,&request.Bookid)
+		if err != nil {
+			log.Println(err)
+		}
+		requests = append(requests, request)
+	}
+	defer rows.Close()
+	var requestlist types.RequestLists
+	requestlist.Requests = requests
+	log.Println(requestlist)
+	return requestlist
+}
+
+
+func Approvecheckout(Id string){
+	db, err := Connection()
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE requests SET status = 'owned' WHERE id = ?"
+	_, err = db.Exec(query,Id)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func Denycheckout(Id string){
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE requests SET status = NULL WHERE id = ?"
+	_, err = db.Exec(query,Id)
+	if err != nil{
+		log.Println(err)
+	}
+		query = "UPDATE books SET count = count + 1 WHERE id IN (SELECT bookId FROM requests WHERE id = ?)"
+		_,err = db.Exec(query, Id)
+		if err != nil {
+			log.Println(err)
+	}
+}
+
+
+func Checkedinbooks() types.RequestLists{
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "SELECT id,username,bookId FROM requests WHERE status = 'checkin'"
+	var requests []types.Request
+
+	rows , err := db.Query(query)
+	if err != nil {
+		log.Println(err)
+	}
+	for rows.Next() {
+		var request types.Request
+		err := rows.Scan(&request.Id , &request.Username,&request.Bookid)
+		if err != nil {
+			log.Println(err)
+		}
+		requests = append(requests, request)
+	}
+	defer rows.Close()
+	var requestlist types.RequestLists
+	requestlist.Requests = requests
+	log.Println(requestlist)
+	return requestlist
+}
+
+
+func Approvecheckin(Id string){
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE requests SET status = 'returned' WHERE id = ?"
+	_,err = db.Exec(query,Id)
+	if err != nil {
+		log.Println(err)
+	}else{
+		query := "UPDATE books SET count = count + 1 WHERE id IN (SELECT bookId FROM requests WHERE id= ?)"
+		_,err = db.Exec(query,Id)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}
+
+
+func Denycheckin(Id string){
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE requests SET status = 'owned' WHERE id = ?"
+	_,err = db.Exec(query,Id)
+	if err != nil {
+		log.Println(err)
+	}
+}

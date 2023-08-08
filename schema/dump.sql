@@ -34,10 +34,10 @@ CREATE TABLE `cookies` (
 
 CREATE TABLE `requests` (
   `id` int(12) AUTO_INCREMENT PRIMARY KEY,
+  `username` varchar(255),
   `bookId` int(12),
-  `userId` int(12),
   `status` ENUM('owned', 'requested','checkin','returned'),
   FOREIGN KEY (bookId) REFERENCES books(id),
-  FOREIGN KEY (userId) REFERENCES users(id)
+  FOREIGN KEY (username) REFERENCES users(username)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

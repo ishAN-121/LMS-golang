@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/books.css" type = "text/css">
+    <title>Admin-checkin</title>
+</head>
+<body>
+    <div class="full-page center">
+    <div class = "position">
+    <h1 class="title">Approve/Deny
+    </h1></div>
+<table class="table size">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">bookId</th>
+        <th scope="col">Username</th>
+        <th scope="col">Status</th>
+        <th scope="col">Approve</th>
+        <th scope="col">Deny</th>
+      </tr>
+    </thead>
+    <tbody>
+        {{range .Requests}}
+      <tr>
+        <th scope="row">{{.Id}}</th>
+        <td>{{.Bookid}}</td>
+        <td>{{.Username}}</td>
+        <td>Checkin</td>
+        <td><form action="/approve-checkin" method="POST">  <input type="hidden" name="requestids" value="{{.Id}}"class="form-control"/>
+        <button class=" btn btn-primary btn-sm m-1"type="submit"> Accept </button></form></td>
+        <td><form action="/deny-checkin" method="POST">  <input type="hidden" name="requestids" value="{{.Id}}"class="form-control"/>
+            <button class=" btn btn-primary btn-sm m-1"type="submit"> Deny </button></form></td>
+            
+        
+      </tr>
+      {{end}}
+      </tbody>
+  </table>
+  <div class ="links">
+    <a href = "logout"><button type="button" class="btn btn-primary btn-lg px-4 me-md-2 ">Logout</button></a>
+    <a href = "/"><button type="button" class="btn btn-outline-secondary btn-lg px-4">Home</button></a></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> </body>
+</html>

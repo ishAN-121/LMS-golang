@@ -1,7 +1,4 @@
 package types
-
-
-
 type Error struct {
 	Msg string `json:"msg"`
 }
@@ -11,7 +8,9 @@ type User struct{
 	Password string `json:"password"`
 	ConfirmPassword string `json:"confirmPassword"`
 }
-
+type Userlist struct{
+	Users []User `json:"users"`
+}
 type Book struct{
 	Id string  `json:"id"`
 	Title string `json:"title"`
@@ -22,4 +21,15 @@ type Book struct{
 
 type ListBooks struct {
 	Books []Book `json:"books"`
+}
+
+
+type Request struct{
+	Id string `json:"id"`
+	Bookid string `json:"bookid"`
+	Username string `json:"username"`
+}
+
+type RequestLists struct{
+	Requests []Request `json:"requests"`
 }

@@ -32,6 +32,7 @@ func Middleware (next http.HandlerFunc) http.HandlerFunc {
 func Middleware_direct(next http.HandlerFunc)http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie :=  r.Header.Get("Cookie")
+		
 		if(len(cookie) < 10){
 			next(w,r)
 		}else{
