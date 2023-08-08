@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-	"fmt"
+
 
 	"LMS/pkg/views"
 	"LMS/pkg/types"
@@ -36,7 +36,7 @@ func Login(w http.ResponseWriter, r *http.Request){
 	t := views.LoginPage()
 	t.Execute(w,err)
 	}else{
-		fmt.Println(admin)
+
 		if !admin{
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 		}else{

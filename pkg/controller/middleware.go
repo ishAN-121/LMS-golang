@@ -4,7 +4,7 @@ import (
 	
 	"LMS/pkg/models"
 	
-	"fmt"
+	
 	"net/http"
 )
 var admin bool
@@ -16,7 +16,6 @@ func Middleware (next http.HandlerFunc) http.HandlerFunc {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else{
 			cookieid := r.Header.Get("Cookie")[10:]
-			fmt.Println(cookieid)
 			var user_exists bool
 			var username string
 			username,user_exists,admin = models.Middleware(cookieid)

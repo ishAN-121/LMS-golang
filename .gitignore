@@ -2,3 +2,4 @@ lms
 config.yaml
 .env
 vendor
+.hintrc
