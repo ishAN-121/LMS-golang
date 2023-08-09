@@ -29,3 +29,8 @@ func Admincheckin() *template.Template {
 	return temp
 }
 
+func Adminrequest () *template.Template {
+	temp := template.Must(template.ParseFiles("templates/adminrequest.html"))
+	return temp
+}
+

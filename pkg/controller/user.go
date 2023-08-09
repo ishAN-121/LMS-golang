@@ -18,62 +18,56 @@ func Userpage(w http.ResponseWriter, r *http.Request){
 }
 
 func Checkoutpage(w http.ResponseWriter, r *http.Request){
+	booksList:= models.Books()
 	t := views.Checkoutpage()
 	var err types.Error
-	t.Execute(w,err)
+	var data types.Data
+	data.Books = booksList.Books
+	data.Error = err.Msg
+	t.Execute(w,data)
 }
 
 func Checkout(w http.ResponseWriter, r *http.Request){
-	bookId_str := r.FormValue("bookId")
-	title := r.FormValue("title")
-	author := r.FormValue("author")
+	bookId_str := r.FormValue("bookIds")
 	username := r.Header.Get("username")
 
-	log.Println(title)
-
 	var error types.Error
-
-	if (title == "" || author == "" || bookId_str == ""){
-		error.Msg  = "Invalid Inputs"
-	}
 	bookId, err := strconv.Atoi(bookId_str)
 	if err != nil{
 		log.Println(err)
 	}
-	if (error.Msg == "") {
-		error = models.Checkout(title,author,username,bookId)
-	}
-		t := views.Checkoutpage()
-		t.Execute(w,error)
+	error = models.Checkout(username,bookId)
+	booksList:= models.Books()
+	
+	var data types.Data
+	data.Books = booksList.Books
+	data.Error = error.Msg
+	t := views.Checkoutpage()
+	t.Execute(w,data)
 	
 }
 
 func Checkinpage(w http.ResponseWriter, r *http.Request){
+	username := r.Header.Get("username")
 	t := views.Checkinpage()
+	booksList:= models.Issuedbooks(username)
 	var err types.Error
-	t.Execute(w,err)
+	var data types.Data
+	data.Books = booksList.Books
+	data.Error = err.Msg
+	t.Execute(w,data)
 }
 
-func Checkin(w http.ResponseWriter, r *http.Request){
-	bookId_str := r.FormValue("bookId")
-	title := r.FormValue("title")
-	author := r.FormValue("author")
+func Checkin (w http.ResponseWriter, r *http.Request){
+	bookId_str := r.FormValue("bookIds")
 	username := r.Header.Get("username")
-
-	var error types.Error
-
-	if (title == "" || author == "" || bookId_str == ""){
-		error.Msg  = "Invalid Inputs"
-	}
+	
 	bookId, err := strconv.Atoi(bookId_str)
 	if err != nil{
 		log.Println(err)
 	}
-	if (error.Msg == "") {
-		error = models.Checkin(title,author,username,bookId)
-	}
-		t := views.Checkinpage()
-		t.Execute(w,error)
+	models.Checkin(username,bookId)
+	Checkinpage(w,r)
 }
 
 func Issuedbooks(w http.ResponseWriter, r *http.Request){
@@ -83,7 +77,7 @@ func Issuedbooks(w http.ResponseWriter, r *http.Request){
 	t.Execute(w,booksList)
 }
 
-func Adminrequest(w http.ResponseWriter, r *http.Request){
+func Makeadminrequest(w http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
 	models.Adminrequest(user.Username)

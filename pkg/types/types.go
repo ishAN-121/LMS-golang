@@ -4,9 +4,11 @@ type Error struct {
 }
 
 type User struct{
+	Id int `json:"id"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 	ConfirmPassword string `json:"confirmPassword"`
+	Adminrequest bool `json:"adminrequest"`
 }
 type Userlist struct{
 	Users []User `json:"users"`
@@ -32,4 +34,9 @@ type Request struct{
 
 type RequestLists struct{
 	Requests []Request `json:"requests"`
+}
+
+type Data struct {
+	Books []Book
+	Error string
 }

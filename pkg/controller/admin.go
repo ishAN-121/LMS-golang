@@ -118,3 +118,21 @@ func Denycheckin(w http.ResponseWriter, r *http.Request){
 	models.Denycheckin(Id)
 	Admincheckin(w,r)
 }
+
+func Adminrequest(w http.ResponseWriter, r *http.Request){
+	userIds := models.AdminRequestUserIds()
+	t := views.Adminrequest()
+	t.Execute(w,userIds)
+}
+
+func Approveadminrequest(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("userids")
+	models.Approveadminrequest(Id)
+	Adminrequest(w,r)
+}
+
+func Denyadminrequest(w http.ResponseWriter, r *http.Request){
+	Id := r.FormValue("userids")
+	models.Denyadminrequest(Id)
+	Adminrequest(w,r)
+}

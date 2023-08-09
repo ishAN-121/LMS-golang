@@ -89,7 +89,6 @@ func Requestedbooks() types.RequestLists{
 	defer rows.Close()
 	var requestlist types.RequestLists
 	requestlist.Requests = requests
-	log.Println(requestlist)
 	return requestlist
 }
 
@@ -181,6 +180,60 @@ func Denycheckin(Id string){
 		log.Printf("Error connecting to database")
 	}
 	query := "UPDATE requests SET status = 'owned' WHERE id = ?"
+	_,err = db.Exec(query,Id)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func AdminRequestUserIds() types.Userlist{
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "SELECT id,username FROM users WHERE adminrequest = 1"
+	var users []types.User
+
+	rows , err := db.Query(query)
+	if err != nil {
+		log.Println(err)
+	}
+	for rows.Next() {
+		var user types.User
+		err := rows.Scan(&user.Id , &user.Username)
+		if err != nil {
+			log.Println(err)
+		}
+		users = append(users, user)
+	}
+	defer rows.Close()
+	var userList types.Userlist
+	userList.Users = users
+	return userList
+}
+
+
+func Approveadminrequest(Id string){
+	db, err := Connection()
+
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE users SET admin = 1, adminrequest = 0 WHERE id = ?"
+	_,err = db.Exec(query,Id)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func Denyadminrequest(Id string){
+	db, err := Connection()
+	log.Println(Id)
+	if err != nil {
+		log.Printf("Error connecting to database")
+	}
+	query := "UPDATE users SET adminrequest = 0 WHERE id = ?"
 	_,err = db.Exec(query,Id)
 	if err != nil {
 		log.Println(err)

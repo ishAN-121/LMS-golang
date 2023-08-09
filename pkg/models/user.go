@@ -7,28 +7,13 @@ import (
 	"strings"
 )
 
-func Checkout(title, author, username string, bookid int) types.Error {
+func Checkout(username string, bookid int) types.Error {
 	var error types.Error
 	db, err := Connection()
 
 	if err != nil {
 		log.Printf("Error connecting to database")
 	}
-
-	var count int
-
-	query := "SELECT count FROM books WHERE id = ? AND author = ? AND title = ?"
-	err = db.QueryRow(query, bookid, author, title).Scan(&count)
-	if err != nil {
-		log.Println(err)
-		error.Msg = "Book does not exist"
-		return error
-	}
-	log.Println(count)
-	if count == 0 {
-		error.Msg = "Currently Unavailable"
-		return error
-	} else {
 		var exists bool
 		query := "SELECT 1 FROM requests WHERE bookId = ? AND username = ? AND (status = 'requested' OR status = 'owned')"
 		err = db.QueryRow(query, bookid, username).Scan(&exists)
@@ -42,67 +27,28 @@ func Checkout(title, author, username string, bookid int) types.Error {
 			_, err = db.Exec(query, bookid, username)
 			if err != nil {
 				log.Println(err)
-			} else {
-				query := "UPDATE books SET count = count - 1 WHERE id = ?"
-				_, err = db.Exec(query, bookid)
-				if err != nil {
-					log.Println(err)
-				} else {
+			}  else {
 					error.Msg = "Book checked out"
 					return error
 				}
 			}
+			return error
 		}
-	}
-	return error
-}
+		
 
-
-
-
-func Checkin(title, author, username string, id int) types.Error {
-	var error types.Error
+func Checkin(username string, id int) {
 	db, err := Connection()
 
 	if err != nil {
 		log.Printf("Error connecting to database")
 	}
-
-	var exists bool
-	query := "SELECT EXISTS (SELECT 1 FROM books WHERE id = ? AND title = ? AND author = ?)"
-	err = db.QueryRow(query, id, title, author).Scan(&exists)
+	query := "UPDATE requests SET status = 'checkin' WHERE  bookId= ? AND username = ? AND status = 'owned' "
+	_, err = db.Exec(query, id, username)
 	if err != nil {
 		log.Println(err)
-	}
-
-	if exists {
-		var owns bool
-		query := "SELECT EXISTS (SELECT 1 FROM requests WHERE bookId=? AND username=? AND status='owned')"
-		err := db.QueryRow(query, id, username).Scan(&owns)
-		if err != nil {
-			log.Println(err)
-			}
-		if owns {
-			query := "UPDATE requests SET status = 'checkin' WHERE  bookId= ? AND username = ? AND status = 'owned' "
-			_, err = db.Exec(query, id, username)
-			if err != nil {
-				log.Println(err)
-			}
-			error.Msg = "Checkin Done"
-			return error
-			} else {
-			error.Msg = "User does not own the book"
-			return error
-			}
-		} else {
-		error.Msg = "Book does not exist"
-		return error
-	}
-}
-
-
-
-
+	}	
+} 
+	
 func Issuedbooks(username string) types.ListBooks {
 
 	db, err := Connection()

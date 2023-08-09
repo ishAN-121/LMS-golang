@@ -18,11 +18,11 @@
     </h1>
     <div class="full-page center">
         <div class="abc">
-            <a href="books"><button type="button" class="w-100 btn btn-info">VIEW BOOKS</button><br></a>
-            <a href="checkout"><button type="button" class="w-100 btn btn-info">CHECKOUT</button><br></a>
-            <a href="checkin"><button type="button" class="w-100 btn btn-info">CHECKIN</button><br></a>
-            <a href="issuedbooks"><button type="button" class="w-100 btn btn-info">VIEW ISSUED BOOKS</button><br></a>
-            <a href = "adminrequest"><button type="button" class="w-100 btn btn-info">Make Admin Request</button><br></a>
+            <a href="books"><button type="button" class="w-100 btn btn-secondary">VIEW BOOKS</button><br></a>
+            <a href="checkout"><button type="button" class="w-100 btn btn-secondary">CHECKOUT</button><br></a>
+            <a href="checkin"><button type="button" class="w-100 btn btn-secondary">CHECKIN</button><br></a>
+            <a href="issuedbooks"><button type="button" class="w-100 btn btn-secondary">VIEW ISSUED BOOKS</button><br></a>
+            <button type="button" class="w-100 btn btn-secondary" id="makeAdminButton">MAKE ADMIN REQUEST</button><br>
            
         </div>
 
@@ -30,8 +30,26 @@
 
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script type = "text/javascript">
+        var makeAdminButton = document.getElementById("makeAdminButton");
+        makeAdminButton.addEventListener('click', async ()=>{
+           await Swal.fire({
+                title : "Request Sent!",
+                text : "",
+                icon : "success",
+                button :"OK",
+                timer: 10000,
+            });
+            // window.location.reload();
+
+            var a = document.createElement("a");
+            a.href = "/makeadminrequest"
+            a.click()
+        })
+
+    </script>
 </body>
 
 </html>
