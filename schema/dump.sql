@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS `users`;
+Terminal close -- exit!
+ers;
 DROP TABLE IF EXISTS `cookies`;
 DROP TABLE IF EXISTS `books`;
 DROP TABLE IF EXISTS `requests`;

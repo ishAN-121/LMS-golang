@@ -8,7 +8,6 @@ import (
 )
 
 func Books(w http.ResponseWriter, r *http.Request) {
-	
 	t := views.Books()
 	booksList := models.Books()
 	t.Execute(w, booksList)

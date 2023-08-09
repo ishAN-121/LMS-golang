@@ -1,18 +1,14 @@
 body{
-    background-image: url(https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=873&q=80);
+    background-image: url(https://img.freepik.com/free-vector/network-mesh-wire-digital-technology-background_1017-27428.jpg?size=626&ext=jpg&ga=GA1.2.80986908.1691588369&semt=ais);
     background-repeat: no-repeat;
     background-size: cover;
-    font-size: 2rem;
 }
 
-.title{
-    font-size: 6rem;
-    margin-bottom: 10rem;
-}
+
 
 .full-page{
     width: 100%;
-    height: 100vh;
+    height: 80vh;
 }
 
 .center{
@@ -21,11 +17,15 @@ body{
     justify-content: center;
     flex-direction: column;
 }
+.title{
+    color : aqua;
+}
 
 .abc{
     text-align: center
 }
 .abc button{
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
+    color : white;
 }

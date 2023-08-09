@@ -1,8 +1,9 @@
 body {
-    background-image: url(https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=873&q=80);
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeUAG750OfEgNzemZrRTOat-Nam4WGawkvmw6TtWy_Dw&s);
     background-repeat: no-repeat;
+    background-clip: border-box;
+    background-color: white;
     background-size: cover;
-    font-size: 2rem;
 }
 
 .full-page {
@@ -10,18 +11,11 @@ body {
     height: 100vh;
     display: flex;
     align-items: center;
-    padding: 2rem;
     flex-direction: column;
 }
 .position{
-    padding:4rem;
+    padding:2rem;
 }
 .size {
-    width: 50%;
-    
-}
-.links{
-    display : flex;
-    justify-content: space-between;
-    width : 20%;
+    width: 100%;
 }

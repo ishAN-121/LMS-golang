@@ -3,10 +3,12 @@ package controller
 import (
 	"net/http"
 	"LMS/pkg/models"
+	"log"
 )
 
 func Logout(w http.ResponseWriter, r *http.Request){
 	username := r.Header.Get("username")
+	log.Println(username)
 	cookie := http.Cookie{
 		Name:     "SessionID",
 		Value:    "",
