@@ -38,5 +38,6 @@ type RequestLists struct{
 
 type Data struct {
 	Books []Book
+	Requests []Request
 	Error string
 }

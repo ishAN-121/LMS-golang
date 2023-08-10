@@ -37,15 +37,16 @@ func Start(){
 	//MIddleWare and Is_admin methods
 
 	r.HandleFunc("/admin",controller.Middleware(controller.Is_admin((controller.Adminpage)))).Methods("GET")
-	r.HandleFunc("/update-add",controller.Middleware(controller.Is_admin((controller.Addbookpage)))).Methods("GET")
-	r.HandleFunc("/update-delete",controller.Middleware(controller.Is_admin((controller.Deletebookpage)))).Methods("GET")
+	r.HandleFunc("/addnewbook",controller.Middleware(controller.Is_admin((controller.AddNewBookPage)))).Methods("GET")
 	r.HandleFunc("/admin-checkout",controller.Middleware(controller.Is_admin((controller.Admincheckout)))).Methods("GET")
 	r.HandleFunc("/admin-checkin",controller.Middleware(controller.Is_admin((controller.Admincheckin)))).Methods("GET")
 	r.HandleFunc("/adminrequest",controller.Middleware(controller.Is_admin((controller.Adminrequest)))).Methods("GET")
+	r.HandleFunc("/adddeletebook",controller.Middleware(controller.Is_admin((controller.AddDeleteBookPage)))).Methods("GET")
 	
 
 	r.HandleFunc("/register",controller.Adduser).Methods("POST")
 	r.HandleFunc("/login",controller.Middleware_direct(controller.Login)).Methods("POST")
+	r.HandleFunc("/addnewbook",controller.Middleware(controller.Is_admin((controller.AddNewBook)))).Methods("POST")
 	r.HandleFunc("/update-add",controller.Middleware(controller.Is_admin((controller.Addbook)))).Methods("POST")
 	r.HandleFunc("/update-delete",controller.Middleware(controller.Is_admin((controller.Deletebook)))).Methods("POST")
 	r.HandleFunc("/approve-checkout",controller.Middleware(controller.Is_admin((controller.Approvecheckout)))).Methods("POST")
@@ -54,7 +55,6 @@ func Start(){
 	r.HandleFunc("/deny-checkin",controller.Middleware(controller.Is_admin((controller.Denycheckin)))).Methods("POST")
 	r.HandleFunc("/approveadminrequest",controller.Middleware(controller.Is_admin((controller.Approveadminrequest)))).Methods("POST")
 	r.HandleFunc("/denyadminrequest",controller.Middleware(controller.Is_admin((controller.Denyadminrequest)))).Methods("POST")
-	
 
 	http.ListenAndServe(":8000", r)
 

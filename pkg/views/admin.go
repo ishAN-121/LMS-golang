@@ -9,8 +9,8 @@ func Adminpage() *template.Template {
 	return temp
 }
 
-func Addbookpage() *template.Template {
-	temp := template.Must(template.ParseFiles("templates/update-add.html"))
+func AddNewbookpage() *template.Template {
+	temp := template.Must(template.ParseFiles("templates/addNewBook.html"))
 	return temp
 }
 
@@ -34,3 +34,7 @@ func Adminrequest () *template.Template {
 	return temp
 }
 
+func AddDeleteBookPage () *template.Template {
+	temp := template.Must(template.ParseFiles("templates/addDeleteBook.html"))
+	return temp
+}

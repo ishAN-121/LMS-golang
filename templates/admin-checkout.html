@@ -17,6 +17,11 @@
     <div class = "position">
     <h1 class="title">Approve/Deny
     </h1></div>
+    {{ if ne .Error ""}}
+    <div class="alert alert-warning" role="alert">
+        {{.Error}}
+    </div>
+    {{end}}
 <table class="table size w-75 table-striped table-hover">
     <thead>
       <tr>
