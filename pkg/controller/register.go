@@ -33,5 +33,5 @@ func Adduser(w http.ResponseWriter, r *http.Request){
 		}
 	}
 	t := views.RegisterPage()
-	t.Execute(w,err)
+	t.Execute(w,msg)
 }
