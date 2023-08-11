@@ -53,6 +53,10 @@ func Start(){
 	r.HandleFunc("/approveadminrequest",controller.Middleware(controller.Is_admin((controller.Approveadminrequest)))).Methods("POST")
 	r.HandleFunc("/denyadminrequest",controller.Middleware(controller.Is_admin((controller.Denyadminrequest)))).Methods("POST")
 
-	http.ListenAndServe(":8000", r)
+
+	r.HandleFunc("/serverError",controller.ServerError).Methods("GET")
+	r.NotFoundHandler = http.HandlerFunc(controller.NotFound)
+
+	http.ListenAndServe(":3000", r)
 
 }

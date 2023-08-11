@@ -28,9 +28,13 @@ func AddDeleteBookPage(w http.ResponseWriter, r *http.Request){
 	t := views.AddDeleteBookPage()
 	db, err := models.Connection()
 	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
 		log.Printf("error %s connecting to the database", err)
 	}
-	booksList := models.GetBooks(db)
+	booksList,err := models.GetBooks(db)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = ""
@@ -44,60 +48,63 @@ func AddNewBook(w http.ResponseWriter, r *http.Request){
 	Title := r.FormValue("title")
 	Author := r.FormValue("author")
 	Copies_str := r.FormValue("copies")
-	var error types.Error
+	var msg types.Error
+	var err error
 
 	if (Title == "" || Author == "" || Copies_str == ""){
-		error.Msg  = "Invalid Inputs"
+		msg.Msg  = "Invalid Inputs"
 	}
-	Copies,err := strconv.Atoi(Copies_str)
-	if err != nil{
-		log.Println(err)
-	}
-	
+	Copies,_:= strconv.Atoi(Copies_str)
 	if (Copies < 0 ){
-		error.Msg  = "Can't have negative copies"
+		msg.Msg  = "Can't have negative copies"
 	}
-	if (error.Msg == "") {
-	error = models.AddNewbook(Title,Author,Copies)
+	if (msg.Msg == "") {
+	msg, err = models.AddNewbook(Title,Author,Copies)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	}
 	t := views.AddNewbookpage()
 	
-	t.Execute(w,error)
+	t.Execute(w,msg)
 }
 func Addbook(w http.ResponseWriter, r *http.Request){
 	
 	Title := r.FormValue("title")
 	Author := r.FormValue("author")
 	Copies_str := r.FormValue("copies")
-	var error types.Error
+	var msg types.Error
+	var err error
 
 	db, err := models.Connection()
 	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
 		log.Printf("error %s connecting to the database", err)
 	}
 
 	if (Title == "" || Author == "" || Copies_str == ""){
-		error.Msg  = "Invalid Inputs"
+		msg.Msg  = "Invalid Inputs"
 	}
-	Copies,err := strconv.Atoi(Copies_str)
-	if err != nil{
-		log.Println(err)
-	}
+	Copies,_ := strconv.Atoi(Copies_str)
 	
 	if (Copies < 0 ){
-		error.Msg  = "Can't add negative copies"
+		msg.Msg  = "Can't add negative copies"
 	}
-	if (error.Msg == "") {
-	error = models.Addbook(Title,Author,Copies)
+	if (msg.Msg == "") {
+	msg,err = models.Addbook(Title,Author,Copies)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
-	booksList := models.GetBooks(db)
+	}
+	booksList,err := models.GetBooks(db)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = error.Msg
+	data.Error = msg.Msg
 	t := views.AddDeleteBookPage()
 	t.Execute(w,data)
-
-
 }
 
 
@@ -106,38 +113,45 @@ func Deletebook(w http.ResponseWriter, r *http.Request){
 	Title := r.FormValue("title")
 	Author := r.FormValue("author")
 	Copies_str := r.FormValue("copies")
-	var error types.Error
+	var msg types.Error
 
 	db, err := models.Connection()
 	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
 		log.Printf("error %s connecting to the database", err)
 	}
 
 	if (Title == "" || Author == "" || Copies_str == ""){
-		error.Msg  = "Invalid Inputs"
+		msg.Msg  = "Invalid Inputs"
 	}
-	Copies,err := strconv.Atoi(Copies_str)
-	if err != nil{
-		log.Println(err)
-	}
-	
+	Copies,_ := strconv.Atoi(Copies_str)
+
 	if (Copies < 0 ){
-		error.Msg  = "Can't Delete negative copies"
+		msg.Msg  = "Can't Delete negative copies"
 	}
-	if (error.Msg == "") {
-		error = models.Deletebook(Title,Author,Copies)
+	if (msg.Msg == "") {
+		msg,err = models.Deletebook(Title,Author,Copies)
+		if err != nil {
+			http.Redirect(w, r, "/serverError", http.StatusFound)
+			}
 		}
-	booksList := models.GetBooks(db)
+	booksList,err := models.GetBooks(db)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = error.Msg
+	data.Error = msg.Msg
 	t := views.AddDeleteBookPage()
 	t.Execute(w,data)
 	
 }
 
 func Admincheckout(w http.ResponseWriter, r *http.Request){
-	requestedbooks := models.Requestedbooks()
+	requestedbooks,err := models.Requestedbooks()
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	var data types.Data
 	data.Error = ""
 	data.Requests = requestedbooks.Requests
@@ -147,11 +161,17 @@ func Admincheckout(w http.ResponseWriter, r *http.Request){
 
 func Approvecheckout(w http.ResponseWriter, r *http.Request){
 	Id := r.FormValue("requestids")
-	var error types.Error
+	
 	var data types.Data
-	error = models.Approvecheckout(Id)
-	data.Error = error.Msg
-	requestedbooks := models.Requestedbooks()
+	msg,err := models.Approvecheckout(Id)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
+	data.Error = msg.Msg
+	requestedbooks,err := models.Requestedbooks()
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	data.Requests = requestedbooks.Requests
 	t := views.Admincheckout()
 	t.Execute(w,data)
@@ -159,18 +179,26 @@ func Approvecheckout(w http.ResponseWriter, r *http.Request){
 
 func Denycheckout(w http.ResponseWriter, r *http.Request){
 	Id := r.FormValue("requestids")
-	var error types.Error
 	var data types.Data
-	error = models.Denycheckout(Id)
-	data.Error = error.Msg
-	requestedbooks := models.Requestedbooks()
+	msg,err := models.Denycheckout(Id)
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
+	data.Error = msg.Msg
+	requestedbooks,err := models.Requestedbooks()
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	data.Requests = requestedbooks.Requests
 	t := views.Admincheckout()
 	t.Execute(w,data)
 }
 
 func Admincheckin(w http.ResponseWriter, r *http.Request){
-	checkedinbooks := models.Checkedinbooks()
+	checkedinbooks,err := models.Checkedinbooks()
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	t := views.Admincheckin()
 	t.Execute(w,checkedinbooks)
 
@@ -189,7 +217,10 @@ func Denycheckin(w http.ResponseWriter, r *http.Request){
 }
 
 func Adminrequest(w http.ResponseWriter, r *http.Request){
-	userIds := models.AdminRequestUserIds()
+	userIds,err := models.AdminRequestUserIds()
+	if err != nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
 	t := views.Adminrequest()
 	t.Execute(w,userIds)
 }

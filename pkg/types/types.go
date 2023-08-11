@@ -6,7 +6,8 @@ type Error struct {
 type User struct{
 	Id int `json:"id"`
 	Username string `json:"username"`
-	Adminrequest bool `json:"adminrequest"`
+	Password string `json:"password"`
+	Admin bool `json:"admin"`
 }
 type Userlist struct{
 	Users []User `json:"users"`
@@ -28,6 +29,7 @@ type Request struct{
 	Id string `json:"id"`
 	Bookid string `json:"bookid"`
 	Username string `json:"username"`
+	Status string `json:"status"`
 }
 
 type RequestLists struct{
@@ -38,4 +40,8 @@ type Data struct {
 	Books []Book
 	Requests []Request
 	Error string
+}
+
+type AdminRequest struct {
+	Adminrequest bool `json:"adminrequest"`
 }

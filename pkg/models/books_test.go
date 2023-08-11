@@ -21,7 +21,7 @@ func TestBooks(t *testing.T) {
     WillReturnRows(rows)
 
 
-	booksList  := GetBooks(db)
+	booksList,_  := GetBooks(db)
 	
 	books := booksList.Books
 

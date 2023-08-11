@@ -9,14 +9,16 @@ import (
 )
 
 
-func GetBooks(db *sql.DB) (types.ListBooks) {
+func GetBooks(db *sql.DB) (types.ListBooks,error) {
 
 	query := "SELECT * FROM books"
 	rows, err := db.Query(query)
 	db.Close()
 
+	var listBooks types.ListBooks
 	if err != nil {
 		log.Printf("error %s querying the database", err)
+		return listBooks,err
 	}
 
 
@@ -26,12 +28,13 @@ func GetBooks(db *sql.DB) (types.ListBooks) {
 		err := rows.Scan(&book.Id, &book.Title,&book.Author,&book.Copies,&book.Totalcount)
 		if err != nil {
 			log.Printf("error %s scanning the row", err)
+			return listBooks,err
 		}
 		fetchBooks = append(fetchBooks, book)
 	}
 
-	var listBooks types.ListBooks
+	
 	listBooks.Books = fetchBooks
-	return listBooks
+	return listBooks,err
 
 }

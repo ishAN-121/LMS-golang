@@ -22,17 +22,21 @@ func Login(w http.ResponseWriter, r *http.Request){
 	password := r.FormValue("password")
 	
 	var user types.User
-	var err types.Error
+	var msg types.Error
+	var err error
 	var admin bool
 
 	user.Username = username
 
 	
 	if (username == "" || password == "" ){
-		err.Msg = "Enter all the details"
+		msg.Msg = "Enter all the details"
 	}
-	admin, err = models.Authenticate(w,r,username,password)
-	if ((err.Msg != "")&& (err.Msg != "Login successful")){
+	admin, msg,err = models.Authenticate(w,r,username,password)
+	if err !=nil {
+		http.Redirect(w, r, "/serverError", http.StatusFound)
+	}
+	if ((msg.Msg != "")&& (msg.Msg != "Login successful")){
 	t := views.LoginPage()
 	t.Execute(w,err)
 	}else{

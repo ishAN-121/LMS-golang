@@ -5,20 +5,20 @@ import(
 	"log"
 	"time"
 	"net/http"
-	//"fmt"
+	
 
 	"golang.org/x/crypto/bcrypt"
 	"github.com/google/uuid"
 )
 
-func Authenticate(w http.ResponseWriter, r *http.Request,username , password string) (bool , types.Error){
+func Authenticate(w http.ResponseWriter, r *http.Request,username , password string) (bool , types.Error,error){
 	db, err := Connection()
 
-	var error types.Error
+	var msg types.Error
 
 	if err != nil {
-		error.Msg = "Error in connecting to database"
-		return false, error
+		msg.Msg = "Error in connecting to database"
+		return false, msg, err
 	}
 	defer db.Close()
 
@@ -28,6 +28,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 	err = db.QueryRow(query, username).Scan(&exists)
 	if err != nil {
 		log.Println(err)
+		return false, msg, err
 	}
 	if exists {
 		var hashedpass string 
@@ -38,11 +39,12 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 		err = db.QueryRow(query, username).Scan(&hashedpass , &admin)
 		if err != nil {
 		log.Println(err)
+		return false, msg, err
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(hashedpass), []byte(password))
 		if err != nil {
-		error.Msg = "wrong password"
-		return false,error
+		msg.Msg = "wrong password"
+		return false, msg, err
 		}else{
 			session_id := uuid.New().String()
 			cookie := http.Cookie{
@@ -57,15 +59,16 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 			err = db.QueryRow(query, username).Scan(&id)
 			if err != nil {
 				log.Println(err)
+				return false, msg, err
 			}
 			db.Exec("INSERT INTO cookies (sessionId, userId, username) VALUES (?, ?,?)", session_id, id,username)
-			//fmt.Println(cookie)
-			error.Msg = "Login successful"
-			return admin,error
+			
+			msg.Msg = "Login successful"
+			return admin,msg,err
 		}
 	}else{
-		error.Msg = "Username does not exist"
-		return false,error
+		msg.Msg = "Username does not exist"
+		return false,msg , err
 	}
 }
 

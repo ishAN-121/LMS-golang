@@ -28,6 +28,8 @@
         <th scope="col">BookId</th>
         <th scope="col">Title</th>
         <th scope="col">Author</th>
+        <th scope="col">Copies</th>
+        <th scope="col">TotalCopies</th>
         <th scope="col" class = "text-center">Add</th>
         <th scope="col" class = "text-center">Delete</th>
       </tr>
@@ -38,7 +40,8 @@
         <th scope="row">{{.Id}}</th>
         <td>{{.Title}}</td>
         <td>{{.Author}}</td>
-        
+        <td>{{.Copies}}</td>
+        <td>{{.Totalcount}}</td>
         <td>
           <form action="/update-add" method="POST">
             <div class="d-flex justify-content-center mb-3">
