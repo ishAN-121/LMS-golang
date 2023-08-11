@@ -7,6 +7,7 @@ import (
 	"LMS/pkg/models"
 	"strconv"
 	"log"
+
 )
 
 func Adminpage(w http.ResponseWriter, r *http.Request){
@@ -25,7 +26,11 @@ func AddNewBookPage(w http.ResponseWriter, r *http.Request){
 
 func AddDeleteBookPage(w http.ResponseWriter, r *http.Request){
 	t := views.AddDeleteBookPage()
-	booksList := models.Books()
+	db, err := models.Connection()
+	if err != nil {
+		log.Printf("error %s connecting to the database", err)
+	}
+	booksList := models.GetBooks(db)
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = ""
@@ -58,8 +63,6 @@ func AddNewBook(w http.ResponseWriter, r *http.Request){
 	t := views.AddNewbookpage()
 	
 	t.Execute(w,error)
-
-
 }
 func Addbook(w http.ResponseWriter, r *http.Request){
 	
@@ -67,6 +70,11 @@ func Addbook(w http.ResponseWriter, r *http.Request){
 	Author := r.FormValue("author")
 	Copies_str := r.FormValue("copies")
 	var error types.Error
+
+	db, err := models.Connection()
+	if err != nil {
+		log.Printf("error %s connecting to the database", err)
+	}
 
 	if (Title == "" || Author == "" || Copies_str == ""){
 		error.Msg  = "Invalid Inputs"
@@ -82,7 +90,7 @@ func Addbook(w http.ResponseWriter, r *http.Request){
 	if (error.Msg == "") {
 	error = models.Addbook(Title,Author,Copies)
 	}
-	booksList := models.Books()
+	booksList := models.GetBooks(db)
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = error.Msg
@@ -99,6 +107,12 @@ func Deletebook(w http.ResponseWriter, r *http.Request){
 	Author := r.FormValue("author")
 	Copies_str := r.FormValue("copies")
 	var error types.Error
+
+	db, err := models.Connection()
+	if err != nil {
+		log.Printf("error %s connecting to the database", err)
+	}
+
 	if (Title == "" || Author == "" || Copies_str == ""){
 		error.Msg  = "Invalid Inputs"
 	}
@@ -113,7 +127,7 @@ func Deletebook(w http.ResponseWriter, r *http.Request){
 	if (error.Msg == "") {
 		error = models.Deletebook(Title,Author,Copies)
 		}
-	booksList := models.Books()
+	booksList := models.GetBooks(db)
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = error.Msg

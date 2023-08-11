@@ -6,8 +6,6 @@ type Error struct {
 type User struct{
 	Id int `json:"id"`
 	Username string `json:"username"`
-	Password string `json:"password"`
-	ConfirmPassword string `json:"confirmPassword"`
 	Adminrequest bool `json:"adminrequest"`
 }
 type Userlist struct{

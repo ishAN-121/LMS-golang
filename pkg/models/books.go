@@ -4,14 +4,13 @@ import (
 	"log"
 
 	"LMS/pkg/types"
+	_ "github.com/go-sql-driver/mysql"
+	"database/sql"
 )
 
 
-func Books() types.ListBooks {
-	db, err := Connection()
-	if err != nil {
-		log.Printf("error %s connecting to the database", err)
-	}
+func GetBooks(db *sql.DB) (types.ListBooks) {
+
 	query := "SELECT * FROM books"
 	rows, err := db.Query(query)
 	db.Close()

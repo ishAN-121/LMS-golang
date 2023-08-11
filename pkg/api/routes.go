@@ -43,9 +43,6 @@ func Start(){
 	r.HandleFunc("/adminrequest",controller.Middleware(controller.Is_admin((controller.Adminrequest)))).Methods("GET")
 	r.HandleFunc("/adddeletebook",controller.Middleware(controller.Is_admin((controller.AddDeleteBookPage)))).Methods("GET")
 	
-
-	r.HandleFunc("/register",controller.Adduser).Methods("POST")
-	r.HandleFunc("/login",controller.Middleware_direct(controller.Login)).Methods("POST")
 	r.HandleFunc("/addnewbook",controller.Middleware(controller.Is_admin((controller.AddNewBook)))).Methods("POST")
 	r.HandleFunc("/update-add",controller.Middleware(controller.Is_admin((controller.Addbook)))).Methods("POST")
 	r.HandleFunc("/update-delete",controller.Middleware(controller.Is_admin((controller.Deletebook)))).Methods("POST")
