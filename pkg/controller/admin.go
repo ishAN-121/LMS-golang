@@ -10,214 +10,214 @@ import (
 
 )
 
-func AdminPage(w http.ResponseWriter, r *http.Request){
+func AdminPage(response http.ResponseWriter, request *http.Request){
 
 	var user types.User
-	user.Username = r.Header.Get("username")
+	user.Username = request.Header.Get("username")
 	tempelateFunc := views.GetTemplate("adminPage")
-	t := tempelateFunc()
-	t.Execute(w,user)
+	template := tempelateFunc()
+	template.Execute(response,user)
 }
 
-func AddNewBookPage(w http.ResponseWriter, r *http.Request){
+func AddNewBookPage(response http.ResponseWriter, request *http.Request){
 	
-	var err types.Error
-	err.Msg = ""
+	var error types.Error
+	error.Msg = ""
 	tempelateFunc := views.GetTemplate("addNewBookPage")
-	t := tempelateFunc()
-	t.Execute(w,err)
+	template := tempelateFunc()
+	template.Execute(response,error)
 }
 
-func UpdateBookPage(w http.ResponseWriter, r *http.Request){
+func UpdateBookPage(response http.ResponseWriter, request *http.Request){
 	
-	db, err := models.Connection()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
-		log.Printf("error %s connecting to the database", err)
+	db, error := models.Connection()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
+		log.Printf("error %s connecting to the database", error)
 	}
-	booksList,err := models.GetBooks(db)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.GetBooks(db)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = ""
 	tempelateFunc := views.GetTemplate("updateBookPage")
-	t := tempelateFunc()
-	t.Execute(w,data)
+	template := tempelateFunc()
+	template.Execute(response,data)
 }
 
 
-func AddNewBook(w http.ResponseWriter, r *http.Request){
+func AddNewBook(response http.ResponseWriter, request *http.Request){
 	
 	var book types.Book
-	var msg types.Error
-	var err error
+	var message types.Error
+	var error error
 
-	book.Title = r.FormValue("title")
-	book.Author = r.FormValue("author")
-	Copies_str := r.FormValue("copies")
+	book.Title = request.FormValue("title")
+	book.Author = request.FormValue("author")
+	Copies_str := request.FormValue("copies")
 	
 
 	if (book.Title == "" || book.Author == "" || Copies_str == ""){
-		msg.Msg  = "Invalid Inputs"
+		message.Msg  = "Invalid Inputs"
 	}
 
 	book.Copies,_= strconv.Atoi(Copies_str)
 	if (book.Copies < 0 ){
-		msg.Msg  = "Can't have negative copies"
+		message.Msg  = "Can'template have negative copies"
 	}
-	if (msg.Msg == "") {
-	msg, err = models.AddNewBook(book.Title,book.Author,book.Copies)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	if (message.Msg == "") {
+	message, error = models.AddNewBook(book.Title,book.Author,book.Copies)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	}
 	tempelateFunc := views.GetTemplate("addNewBookPage")
-	t := tempelateFunc()
-	t.Execute(w,msg)
+	template := tempelateFunc()
+	template.Execute(response,message)
 }
 
 
-func AddBook(w http.ResponseWriter, r *http.Request){
+func AddBook(response http.ResponseWriter, request *http.Request){
 	
 	var book types.Book
-	var msg types.Error
-	var err error
+	var message types.Error
+	var error error
 
-	book.Title = r.FormValue("title")
-	book.Author = r.FormValue("author")
-	Copies_str := r.FormValue("copies")
-	updateBookType := r.FormValue("update")
+	book.Title = request.FormValue("title")
+	book.Author = request.FormValue("author")
+	Copies_str := request.FormValue("copies")
+	updateBookType := request.FormValue("update")
 	
 
-	db, err := models.Connection()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
-		log.Printf("error %s connecting to the database", err)
+	db, error := models.Connection()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
+		log.Printf("error %s connecting to the database", error)
 	}
 
 	if (book.Title == "" || book.Author == "" || Copies_str == ""){
-		msg.Msg  = "Invalid Inputs"
+		message.Msg  = "Invalid Inputs"
 	}
 	book.Copies,_ = strconv.Atoi(Copies_str)
 	
 	if (book.Copies < 0 ){
-		msg.Msg  = "Copies can not be negative"
+		message.Msg  = "Copies can not be negative"
 	}
-	if (msg.Msg == "") {
+	if (message.Msg == "") {
 		if (updateBookType == "add"){
-	msg,err = models.AddBook(book.Title,book.Author,book.Copies)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	message,error = models.AddBook(book.Title,book.Author,book.Copies)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 		}
 	}else{
-		msg,err = models.DeleteBook(book.Title,book.Author,book.Copies)
-		if err != nil {
-			http.Redirect(w, r, "/serverError", http.StatusFound)
+		message,error = models.DeleteBook(book.Title,book.Author,book.Copies)
+		if error != nil {
+			http.Redirect(response, request, "/serverError", http.StatusFound)
 			}
 	}
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	}
-	booksList,err := models.GetBooks(db)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.GetBooks(db)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = msg.Msg
+	data.Error = message.Msg
 	tempelateFunc := views.GetTemplate("updateBookPage")
-	t := tempelateFunc()
-	t.Execute(w,data)
+	template := tempelateFunc()
+	template.Execute(response,data)
 }
 
-func AdminCheckout(w http.ResponseWriter, r *http.Request){
-	requestedBooks,err := models.RequestedBooks()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+func AdminCheckout(response http.ResponseWriter, request *http.Request){
+	requestedBooks,error := models.RequestedBooks()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	var data types.Data
 	data.Error = ""
 	data.Requests = requestedBooks.Requests
 	tempelateFunc := views.GetTemplate("adminCheckout")
-	t := tempelateFunc()
-	t.Execute(w,data)
+	template := tempelateFunc()
+	template.Execute(response,data)
 }
 
-func ApproveCheckout(w http.ResponseWriter, r *http.Request){
-	var request types.Request
-	request.Id = r.FormValue("requestIds")
-	approveType := r.FormValue("approve")
+func ApproveCheckout(response http.ResponseWriter, request *http.Request){
+	var bookRequest types.Request
+	bookRequest.Id = request.FormValue("requestIds")
+	approveType := request.FormValue("approve")
 	var data types.Data
-	var msg types.Error
-	var err error
+	var message types.Error
+	var error error
 	
 	if (approveType == "true"){
-	msg,err = models.ApproveCheckout(request.Id)
+	message,error = models.ApproveCheckout(bookRequest.Id)
 	}else{
-	msg,err = models.DenyCheckout(request.Id)
+	message,error = models.DenyCheckout(bookRequest.Id)
 	}
 
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
-	data.Error = msg.Msg
-	requestedBooks,err := models.RequestedBooks()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	data.Error = message.Msg
+	requestedBooks,error := models.RequestedBooks()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	data.Requests = requestedBooks.Requests
 	tempelateFunc := views.GetTemplate("adminCheckout")
-	t := tempelateFunc()
-	t.Execute(w,data)
+	template := tempelateFunc()
+	template.Execute(response,data)
 }
 
 
-func AdminCheckin(w http.ResponseWriter, r *http.Request){
-	checkedinBooks,err := models.CheckedinBooks()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+func AdminCheckin(response http.ResponseWriter, request *http.Request){
+	checkedinBooks,error := models.CheckedinBooks()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	tempelateFunc := views.GetTemplate("adminCheckin")
-	t := tempelateFunc()
-	t.Execute(w,checkedinBooks)
+	template := tempelateFunc()
+	template.Execute(response,checkedinBooks)
 
 }
 
-func ApproveCheckin(w http.ResponseWriter, r *http.Request){
-	var request types.Request
-	request.Id = r.FormValue("requestIds")
-	approveType := r.FormValue("approve")
+func ApproveCheckin(response http.ResponseWriter, request *http.Request){
+	var bookRequest types.Request
+	bookRequest.Id = request.FormValue("requestIds")
+	approveType := request.FormValue("approve")
 	if (approveType == "true"){
-		models.ApproveCheckin(request.Id)
+		models.ApproveCheckin(bookRequest.Id)
 		}else{
-		models.DenyCheckin(request.Id)
+		models.DenyCheckin(bookRequest.Id)
 		}
-	AdminCheckin(w,r)
+	AdminCheckin(response,request)
 }
 
 
-func AdminRequest(w http.ResponseWriter, r *http.Request){
-	userIds,err := models.AdminRequestUserIds()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+func AdminRequest(response http.ResponseWriter, request *http.Request){
+	userIds,error := models.AdminRequestUserIds()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	tempelateFunc := views.GetTemplate("adminRequest")
-	t := tempelateFunc()
-	t.Execute(w,userIds)
+	template := tempelateFunc()
+	template.Execute(response,userIds)
 }
 
-func ApproveAdminRequest(w http.ResponseWriter, r *http.Request){
-	var request types.Request
-	request.Id = r.FormValue("userIds")
-	approveType := r.FormValue("approve")
+func ApproveAdminRequest(response http.ResponseWriter, request *http.Request){
+	var adminRequest types.Request
+	adminRequest.Id = request.FormValue("userIds")
+	approveType := request.FormValue("approve")
 	if (approveType == "true"){
-		models.ApproveAdminRequest(request.Id)
+		models.ApproveAdminRequest(adminRequest.Id)
 		}else{
-		models.DenyAdminRequest(request.Id)
+		models.DenyAdminRequest(adminRequest.Id)
 		}
-	AdminRequest(w,r)
+	AdminRequest(response,request)
 }

@@ -17,11 +17,11 @@ func dsn() string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s", config.Config.DBUSERNAME, config.Config.DBPASSWORD, config.Config.DBHOST, config.Config.DBNAME)
 }
 func Connection() (*sql.DB, error) {  
-	db, err := sql.Open("mysql", dsn()) 
-		if err != nil {
+	db, error := sql.Open("mysql", dsn()) 
+		if error != nil {
 		
-		log.Printf("Error: %s when opening DB", err)
-		return nil, err
+		log.Printf("Error: %s when opening DB", error)
+		return nil, error
 		}
 		db.SetMaxOpenConns(20)
 		db.SetMaxIdleConns(20)
@@ -29,10 +29,10 @@ func Connection() (*sql.DB, error) {
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
     defer cancelfunc()
-    err = db.PingContext(ctx)
-    if err != nil {
-        log.Printf("Errors %s pinging DB", err)
-        return nil, err
+    error = db.PingContext(ctx)
+    if error != nil {
+        log.Printf("Errors %s pinging DB", error)
+        return nil, error
     }
-	return db, err
+	return db, error
 }

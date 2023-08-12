@@ -6,9 +6,9 @@ import (
 	"LMS/pkg/types"
 )
 
-func Logout(w http.ResponseWriter, r *http.Request){
+func Logout(response http.ResponseWriter, request *http.Request){
 	var user types.User
-	user.Username = r.Header.Get("username")
+	user.Username = request.Header.Get("username")
 
 	cookie := http.Cookie{
 		Name:     "sessionId",
@@ -16,7 +16,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		MaxAge:    -1,    
 		HttpOnly: true, 
 	}
-	http.SetCookie(w,&cookie)
+	http.SetCookie(response,&cookie)
 	models.Logout(user.Username)
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(response, request, "/", http.StatusFound)
 }

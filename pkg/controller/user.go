@@ -10,114 +10,114 @@ import (
 	"LMS/pkg/models"
 )
 
-func UserPage(w http.ResponseWriter, r *http.Request){
+func UserPage(response http.ResponseWriter, r *http.Request){
 	
 	var user types.User
 	user.Username = r.Header.Get("username")
 	tempelateFunc := views.GetTemplate("userPage")
 	t := tempelateFunc()
-	t.Execute(w,user)
+	t.Execute(response,user)
 }
 
-func CheckoutPage(w http.ResponseWriter, r *http.Request){
-	db, err := models.Connection()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
-		log.Printf("error %s connecting to the database", err)
+func CheckoutPage(response http.ResponseWriter, r *http.Request){
+	db, error := models.Connection()
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
+		log.Printf("error %s connecting to the database", error)
 	}
 
-	booksList,err := models.GetBooks(db)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.GetBooks(db)
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
 	}
 	
-	var error types.Error
+	var message types.Error
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = error.Msg
+	data.Error = message.Msg
 	tempelateFunc := views.GetTemplate("checkoutPage")
 	t := tempelateFunc()
-	t.Execute(w,data)
+	t.Execute(response,data)
 }
 
-func Checkout(w http.ResponseWriter, r *http.Request){
-	var request types.Request
+func Checkout(response http.ResponseWriter, r *http.Request){
+	var bookRequest types.Request
 	bookId_str := r.FormValue("bookIds")
-	request.Username = r.Header.Get("username")
+	bookRequest.Username = r.Header.Get("username")
 
-	db, err := models.Connection()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
-		log.Printf("error %s connecting to the database", err)
+	db, error := models.Connection()
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
+		log.Printf("error %s connecting to the database", error)
 	}
 
-	var msg types.Error
-	request.BookId, _ = strconv.Atoi(bookId_str)
-	msg,err = models.Checkout(request.Username,request.BookId)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	var message types.Error
+	bookRequest.BookId, _ = strconv.Atoi(bookId_str)
+	message,error = models.Checkout(bookRequest.Username,bookRequest.BookId)
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
 
 	}
-	booksList,err := models.GetBooks(db)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.GetBooks(db)
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
 	}
 	
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = msg.Msg
+	data.Error = message.Msg
 	tempelateFunc := views.GetTemplate("checkoutPage")
 	t := tempelateFunc()
-	t.Execute(w,data)
+	t.Execute(response,data)
 	
 }
 
-func CheckinPage(w http.ResponseWriter, r *http.Request){
+func CheckinPage(response http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
 	
-	booksList,err:= models.IssuedBooks(user.Username)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error:= models.IssuedBooks(user.Username)
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
 	}
-	var msg types.Error
+	var message types.Error
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = msg.Msg
+	data.Error = message.Msg
 	tempelateFunc := views.GetTemplate("checkinPage")
 	t := tempelateFunc()
-	t.Execute(w,data)
+	t.Execute(response,data)
 }
 
-func Checkin (w http.ResponseWriter, r *http.Request){
-	var request types.Request
-	bookId_str := r.FormValue("bookIds")
-	request.Username = r.Header.Get("username")
+func Checkin (response http.ResponseWriter, r *http.Request){
+	var bookRequest types.Request
+	bookIdstr := r.FormValue("bookIds")
+	bookRequest.Username = r.Header.Get("username")
 
 	
-	request.BookId, _ = strconv.Atoi(bookId_str)
-	models.Checkin(request.Username,request.BookId)
-	CheckinPage(w,r)
+	bookRequest.BookId, _ = strconv.Atoi(bookIdstr)
+	models.Checkin(bookRequest.Username,bookRequest.BookId)
+	CheckinPage(response,r)
 }
 
-func IssuedBooks(w http.ResponseWriter, r *http.Request){
+func IssuedBooks(response http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
 	
-	booksList,err := models.IssuedBooks(user.Username)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.IssuedBooks(user.Username)
+	if error != nil {
+		http.Redirect(response, r, "/serverError", http.StatusFound)
 	}
 	tempelateFunc := views.GetTemplate("issuedBooks")
 	t := tempelateFunc()
-	t.Execute(w,booksList)
+	t.Execute(response,booksList)
 }
 
-func MakeAdminRequest(w http.ResponseWriter, r *http.Request){
+func MakeAdminRequest(response http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
 	models.AdminRequest(user.Username)
 	tempelateFunc := views.GetTemplate("userPage")
 	t := tempelateFunc()
-	t.Execute(w,user)
+	t.Execute(response,user)
 }

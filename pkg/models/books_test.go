@@ -8,9 +8,9 @@ import (
 )
 func TestBooks(t *testing.T) {
 
-	db, mock, err := sqlmock.New()
-	if err != nil {
-    	t.Fatalf("Error creating mock database connection: %v", err)
+	db, mock, error := sqlmock.New()
+	if error != nil {
+    	t.Fatalf("Error creating mock database connection: %v", error)
     }
     defer db.Close()
 
@@ -34,8 +34,8 @@ func TestBooks(t *testing.T) {
 	assert.Equal(t, 7, books[0].Totalcount)
 
 
-	if err := mock.ExpectationsWereMet(); err != nil {
-        t.Errorf("Unfulfilled expectations: %s", err)
+	if error := mock.ExpectationsWereMet(); error != nil {
+        t.Errorf("Unfulfilled expectations: %s", error)
     }
 }
 

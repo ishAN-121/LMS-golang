@@ -5,8 +5,8 @@ import (
 	"LMS/pkg/views"
 )
 
-func ServerError(w http.ResponseWriter, r *http.Request){
+func ServerError(response http.ResponseWriter, request *http.Request){
 	tempelateFunc := views.GetTemplate("serverErrorPage")
-	t := tempelateFunc()
-	t.Execute(w,nil)
+	template := tempelateFunc()
+	template.Execute(response,nil)
 }

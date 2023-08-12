@@ -10,20 +10,20 @@ import (
 var admin bool
 
 func Middleware (next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		cookie :=  r.Header.Get("Cookie")
+	return func(response http.ResponseWriter, request *http.Request) {
+		cookie :=  request.Header.Get("Cookie")
 		if(len(cookie) < 10){
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(response, request, "/", http.StatusSeeOther)
 		}else{
-			cookieId := r.Header.Get("Cookie")[10:]
+			cookieId := request.Header.Get("Cookie")[10:]
 			var userExists bool
 			var user types.User
 
 			user.Username,userExists,user.Admin = models.Middleware(cookieId)
 			admin = user.Admin
 			if userExists{
-				r.Header.Add("username", user.Username)
-				next(w,r)
+				request.Header.Add("username", user.Username)
+				next(response,request)
 		
 			}
 		
@@ -32,23 +32,23 @@ func Middleware (next http.HandlerFunc) http.HandlerFunc {
 }
 
 func MiddlewareDirect(next http.HandlerFunc)http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		cookie :=  r.Header.Get("Cookie")
+	return func(response http.ResponseWriter, request *http.Request) {
+		cookie :=  request.Header.Get("Cookie")
 		
 		if(len(cookie) < 10){
-			next(w,r)
+			next(response,request)
 		}else{
-			cookieid := r.Header.Get("Cookie")[10:]
-			var user_exists bool
+			cookieid := request.Header.Get("Cookie")[10:]
+			var userExists bool
 			var user types.User
-			user.Username,user_exists,user.Admin = models.Middleware(cookieid)
+			user.Username,userExists,user.Admin = models.Middleware(cookieid)
 			admin = user.Admin
-			if user_exists{
-				r.Header.Add("username", user.Username)
+			if userExists{
+				request.Header.Add("username", user.Username)
 				if admin{
-					http.Redirect(w, r, "/admin", http.StatusSeeOther)
+					http.Redirect(response, request, "/admin", http.StatusSeeOther)
 				}else{
-					http.Redirect(w, r, "/user", http.StatusSeeOther)
+					http.Redirect(response, request, "/user", http.StatusSeeOther)
 				}
 			}
 		}
@@ -56,21 +56,21 @@ func MiddlewareDirect(next http.HandlerFunc)http.HandlerFunc {
 }
 
 func IsAdmin(next http.HandlerFunc)http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(response http.ResponseWriter, request *http.Request) {
 		if admin{
-			next(w,r)
+			next(response,request)
 		}else{
-			http.Redirect(w, r, "/user", http.StatusSeeOther)
+			http.Redirect(response, request, "/user", http.StatusSeeOther)
 		}
 	}
 }
 
 func IsUser(next http.HandlerFunc)http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(response http.ResponseWriter, request *http.Request) {
 		if !admin{
-			next(w,r)
+			next(response,request)
 		}else{
-			http.Redirect(w, r, "/admin", http.StatusSeeOther)
+			http.Redirect(response, request, "/admin", http.StatusSeeOther)
 		}
 	}
 }

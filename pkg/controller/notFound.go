@@ -5,8 +5,8 @@ import (
 	"LMS/pkg/views"
 )
 
-func NotFound(w http.ResponseWriter, r *http.Request){
+func NotFound(response http.ResponseWriter, request *http.Request){
 	tempelateFunc := views.GetTemplate("notFoundPage")
-	t := tempelateFunc()
-	t.Execute(w,nil)
+	template := tempelateFunc()
+	template.Execute(response,nil)
 }

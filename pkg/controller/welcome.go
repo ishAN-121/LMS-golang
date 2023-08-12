@@ -6,8 +6,8 @@ import (
 	"LMS/pkg/views"
 )
 
-func Welcome(w http.ResponseWriter, r *http.Request){
+func Welcome(response http.ResponseWriter, request *http.Request){
 	tempelateFunc := views.GetTemplate("startPage")
-	t := tempelateFunc()
-	t.Execute(w,nil)
+	template := tempelateFunc()
+	template.Execute(response,nil)
 }

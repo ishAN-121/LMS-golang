@@ -12,23 +12,23 @@ import(
 )
 
 func Authenticate(w http.ResponseWriter, r *http.Request,username , password string) (bool , types.Error,error){
-	db, err := Connection()
+	db, error := Connection()
 
-	var msg types.Error
+	var message types.Error
 
-	if err != nil {
-		msg.Msg = "Error in connecting to database"
-		return false, msg, err
+	if error != nil {
+		message.Msg = "Error in connecting to database"
+		return false, message, error
 	}
 	defer db.Close()
 
 	query := "SELECT EXISTS (SELECT 1 FROM users WHERE username = ?)"
 
 	var exists bool
-	err = db.QueryRow(query, username).Scan(&exists)
-	if err != nil {
-		log.Println(err)
-		return false, msg, err
+	error = db.QueryRow(query, username).Scan(&exists)
+	if error != nil {
+		log.Println(error)
+		return false, message, error
 	}
 	if exists {
 		var hashedPass string 
@@ -36,15 +36,15 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 
 		query := "SELECT hash,admin FROM users WHERE username = ?"
 
-		err = db.QueryRow(query, username).Scan(&hashedPass , &admin)
-		if err != nil {
-		log.Println(err)
-		return false, msg, err
+		error = db.QueryRow(query, username).Scan(&hashedPass , &admin)
+		if error != nil {
+		log.Println(error)
+		return false, message, error
 		}
-		err = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password))
-		if err != nil {
-		msg.Msg = "wrong password"
-		return false, msg, err
+		error = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password))
+		if error != nil {
+		message.Msg = "wrong password"
+		return false, message, error
 		}else{
 			sessionId := uuid.New().String()
 			cookie := http.Cookie{
@@ -56,19 +56,19 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 			http.SetCookie(w, &cookie)
 			var id int
 			query := "SELECT id FROM users WHERE username = ?"
-			err = db.QueryRow(query, username).Scan(&id)
-			if err != nil {
-				log.Println(err)
-				return false, msg, err
+			error = db.QueryRow(query, username).Scan(&id)
+			if error != nil {
+				log.Println(error)
+				return false, message, error
 			}
 			db.Exec("INSERT INTO cookies (sessionId, userId, username) VALUES (?, ?,?)", sessionId, id,username)
 			
-			msg.Msg = "Login successful"
-			return admin,msg,err
+			message.Msg = "Login successful"
+			return admin,message,error
 		}
 	}else{
-		msg.Msg = "Username does not exist"
-		return false,msg , err
+		message.Msg = "Username does not exist"
+		return false,message , error
 	}
 }
 

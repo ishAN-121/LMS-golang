@@ -10,41 +10,41 @@ import (
 
 )
 
-func LoginPage(w http.ResponseWriter, r *http.Request){
-	var err types.Error
-	err.Msg = ""
+func LoginPage(response http.ResponseWriter, request *http.Request){
+	var error types.Error
+	error.Msg = ""
 	tempelateFunc := views.GetTemplate("loginPage")
-	t := tempelateFunc()
-	t.Execute(w,err)
+	template := tempelateFunc()
+	template.Execute(response,error)
 }
 
-func Login(w http.ResponseWriter, r *http.Request){
+func Login(response http.ResponseWriter, request *http.Request){
 	var user types.User
-	var msg types.Error
-	var err error
+	var message types.Error
+	var error error
 
-	user.Username = r.FormValue("username")
-	user.Password = r.FormValue("password")
+	user.Username = request.FormValue("username")
+	user.Password = request.FormValue("password")
 
 	if (user.Username == "" || user.Password == "" ){
-		msg.Msg = "Enter all the details"
+		message.Msg = "Enter all the details"
 	}
 
-	user.Admin, msg,err = models.Authenticate(w,r,user.Username,user.Password)
-	if err !=nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	user.Admin, message,error = models.Authenticate(response,request,user.Username,user.Password)
+	if error !=nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 
-	if ((msg.Msg != "")&& (msg.Msg != "Login successful")){
+	if ((message.Msg != "")&& (message.Msg != "Login successful")){
 		tempelateFunc := views.GetTemplate("login")
-		t := tempelateFunc()
-		t.Execute(w,err)
+		template := tempelateFunc()
+		template.Execute(response,error)
 	}else{
 
 		if !user.Admin{
-			http.Redirect(w, r, "/user", http.StatusSeeOther)
+			http.Redirect(response, request, "/user", http.StatusSeeOther)
 		}else{
-			http.Redirect(w, r, "/admin", http.StatusSeeOther)
+			http.Redirect(response, request, "/admin", http.StatusSeeOther)
 		}
 	}
 	

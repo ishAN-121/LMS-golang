@@ -8,48 +8,48 @@ import (
 )
 
 func hashPassword(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
-	if err != nil {
-		return "", err
+	hash, error := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if error != nil {
+		return "", error
 	}
 	return string(hash), nil
 }
 
 func AddUser(username, password string) (types.Error,error) {
-	var error types.Error
-	db, err := Connection()
+	var message types.Error
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return error,err
+		return message,error
 	}
 
 
 	query := "SELECT EXISTS (SELECT 1 FROM users WHERE username = ?)"
 
 	var exists bool
-	err = db.QueryRow(query, username).Scan(&exists)
-	if err != nil {
-		log.Println(err)
-		return error,err
+	error = db.QueryRow(query, username).Scan(&exists)
+	if error != nil {
+		log.Println(error)
+		return message,error
 	}
 
 	if exists {
-		error.Msg = "User already exists"
-		return error,err
+		message.Msg = "User already exists"
+		return message,error
 	} else {
-		hashedPassword, err := hashPassword(password)
-		if err != nil {
-			log.Println(err)
-			return error,err
+		hashedPassword, error := hashPassword(password)
+		if error != nil {
+			log.Println(error)
+			return message,error
 		}
-		_, err = db.Exec(`INSERT INTO users (username,hash,admin,adminrequest) VALUES (?, ?, ?,?)`, username, hashedPassword, 0, 0)
-		if err != nil {
-			log.Println(err)
+		_, error = db.Exec(`INSERT INTO users (username,hash,admin,adminrequest) VALUES (?, ?, ?,?)`, username, hashedPassword, 0, 0)
+		if error != nil {
+			log.Println(error)
 		} else {
-			error.Msg = "Registered Successfully"
-			return error,err
+			message.Msg = "Registered Successfully"
+			return message,error
 		}
-		return error,err
+		return message,error
 	}
 }

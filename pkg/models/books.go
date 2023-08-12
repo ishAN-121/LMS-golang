@@ -12,29 +12,29 @@ import (
 func GetBooks(db *sql.DB) (types.ListBooks,error) {
 
 	query := "SELECT * FROM books"
-	rows, err := db.Query(query)
+	rows, error := db.Query(query)
 	db.Close()
 
 	var listBooks types.ListBooks
-	if err != nil {
-		log.Printf("error %s querying the database", err)
-		return listBooks,err
+	if error != nil {
+		log.Printf("error %s querying the database", error)
+		return listBooks,error
 	}
 
 
 	var fetchBooks []types.Book
 	for rows.Next() {
 		var book types.Book
-		err := rows.Scan(&book.Id, &book.Title,&book.Author,&book.Copies,&book.Totalcount)
-		if err != nil {
-			log.Printf("error %s scanning the row", err)
-			return listBooks,err
+		error := rows.Scan(&book.Id, &book.Title,&book.Author,&book.Copies,&book.Totalcount)
+		if error != nil {
+			log.Printf("error %s scanning the row", error)
+			return listBooks,error
 		}
 		fetchBooks = append(fetchBooks, book)
 	}
 
 	
 	listBooks.Books = fetchBooks
-	return listBooks,err
+	return listBooks,error
 
 }

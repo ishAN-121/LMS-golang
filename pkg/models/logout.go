@@ -6,16 +6,16 @@ import(
 )
 
 func Logout(username string)error{
-	db,err := Connection()
-	if err != nil {
-		log.Printf("Error: %s when opening DB", err)
-		return err
+	db,error := Connection()
+	if error != nil {
+		log.Printf("Error: %s when opening DB", error)
+		return error
 		}
 	query := `DELETE FROM cookies WHERE username = ?;`
-	_ ,err = db.Exec(query, username)
-	if err != nil {
-		log.Println(err)
-		return err
+	_ ,error = db.Exec(query, username)
+	if error != nil {
+		log.Println(error)
+		return error
 	}
-	return err
+	return error
 }

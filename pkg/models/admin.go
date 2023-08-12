@@ -5,309 +5,309 @@ import(
 )
 
 func AddNewBook(title,author string , copies int) (types.Error,error){
-	var error types.Error
-	db, err := Connection()
+	var message types.Error
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 	log.Printf("Error connecting to database")
-	return error,err
+	return message,error
 	}
 	query := "SELECT EXISTS (SELECT 1 FROM books WHERE title = ? AND author = ?)"
 	var exists bool
-	err = db.QueryRow(query,title,author).Scan(&exists)
-	if err != nil {
-		log.Println(err)
-		return error,err
+	error = db.QueryRow(query,title,author).Scan(&exists)
+	if error != nil {
+		log.Println(error)
+		return message,error
 	}
 	if exists{
-		error.Msg = "Book Already exists"
-		return error,err
+		message.Msg = "Book Already exists"
+		return message,error
 	}else{
 		query := "INSERT INTO books (author,title,count,totalcount) VALUES (?, ?, ?, ?)"
 		_ = db.QueryRow(query,author,title,copies,copies)
-		error.Msg = "Added Successfully"
-		return error,err
+		message.Msg = "Added Successfully"
+		return message,error
 	}
 }
 
 func AddBook(title,author string , copies int) (types.Error,error){
-	var error types.Error
-	db, err := Connection()
+	var message types.Error
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return error,err
+		return message,error
 	}
 	
 	query := "UPDATE books SET count = count + ?, totalcount = totalcount + ? WHERE author = ? AND title= ? "
 	_ = db.QueryRow(query,copies,copies,author,title)
-	error.Msg = "Added Successfully"
-	return error,err
+	message.Msg = "Added Successfully"
+	return message,error
 }
 
 func DeleteBook(title,author string , copies int) (types.Error,error){
-	var error types.Error
-	db, err := Connection()
+	var message types.Error
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return error,err
+		return message,error
 	}
 	var count int
 	query := "SELECT count FROM books WHERE title = ? AND author = ?"
-	err = db.QueryRow(query,title,author).Scan(&count)
-	if err != nil {
-		log.Println(err)
-		return error,err
+	error = db.QueryRow(query,title,author).Scan(&count)
+	if error != nil {
+		log.Println(error)
+		return message,error
 	}
 	
 	if (count != 0 ){
 		if(copies > count){
-			error.Msg = "Too many copies for deletion"
-			return error,err
+			message.Msg = "Too many copies for deletion"
+			return message,error
 		}else{
 			query := "UPDATE books SET count = count - ?, totalcount = totalcount - ? WHERE author = ? AND title = ? "
 			
 			_ = db.QueryRow(query,copies,copies,author,title)
-			error.Msg = "Deletion Successful"
-			return error,err
+			message.Msg = "Deletion Successful"
+			return message,error
 		}
 
 	}else{
-		error.Msg = "Book not available for deletion"
-		return error,err
+		message.Msg = "Book not available for deletion"
+		return message,error
 	}
 }
 
 
 func RequestedBooks() (types.RequestLists,error){
-	db, err := Connection()
+	db, error := Connection()
 	var requestList types.RequestLists
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return requestList,err
+		return requestList,error
 	}
 	query := "SELECT id,username,bookId FROM requests WHERE status = 'requested'"
 	var requests []types.Request
 
-	rows , err := db.Query(query)
-	if err != nil {
-		log.Println(err)
-		return requestList,err
+	rows , error := db.Query(query)
+	if error != nil {
+		log.Println(error)
+		return requestList,error
 	}
 	for rows.Next() {
 		var request types.Request
-		err := rows.Scan(&request.Id , &request.Username,&request.BookId)
-		if err != nil {
-			log.Println(err)
-			return requestList,err
+		error := rows.Scan(&request.Id , &request.Username,&request.BookId)
+		if error != nil {
+			log.Println(error)
+			return requestList,error
 		}
 		requests = append(requests, request)
 	}
 	defer rows.Close()
 	
 	requestList.Requests = requests
-	return requestList,err
+	return requestList,error
 }
 
 
 func ApproveCheckout(Id string) (types.Error,error) {
-	db, err := Connection()
-	var msg types.Error
-	if err != nil {
+	db, error := Connection()
+	var message types.Error
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return msg,err
+		return message,error
 	}
 	var bookId,count int 
 	query := "SELECT bookId from requests WHERE id = ?"
-	err = db.QueryRow(query,Id).Scan(&bookId)
-	if err != nil {
-		log.Println(err)
-		return msg,err
+	error = db.QueryRow(query,Id).Scan(&bookId)
+	if error != nil {
+		log.Println(error)
+		return message,error
 	}else{
 		query = "SELECT count FROM books WHERE id = ?"
-		err = db.QueryRow(query,bookId).Scan(&count)
-		if err != nil {
-			log.Println(err)
-			return msg,err
+		error = db.QueryRow(query,bookId).Scan(&count)
+		if error != nil {
+			log.Println(error)
+			return message,error
 	}else{
 		if count == 0 {
-			msg.Msg = "Book not available to checkout"
-			return msg,err
+			message.Msg = "Book not available to checkout"
+			return message,error
 		}else{
 			query = "UPDATE requests SET status = 'owned' WHERE id = ?"
-			_, err = db.Exec(query,Id)
-			if err != nil {
-			log.Println(err)
-			return msg,err
+			_, error = db.Exec(query,Id)
+			if error != nil {
+			log.Println(error)
+			return message,error
 			}else{
 			query = "UPDATE books SET count = count - 1 WHERE id = ?"
-			_,err = db.Exec(query,bookId)
-			if err != nil {
-				log.Println(err)
-				return msg,err
+			_,error = db.Exec(query,bookId)
+			if error != nil {
+				log.Println(error)
+				return message,error
 				}
 			}
 		}
 	}
 }
-return msg,err
+return message,error
 }
 	
 
 
 func DenyCheckout(Id string) (types.Error,error) {
-	db, err := Connection()
-	var msg types.Error
-	msg.Msg = ""
-	if err != nil {
+	db, error := Connection()
+	var message types.Error
+	message.Msg = ""
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return msg,err
+		return message,error
 	}
 	query := "UPDATE requests SET status = NULL WHERE id = ?"
-	_, err = db.Exec(query,Id)
-	if err != nil{
-		log.Println(err)
-		return msg,err
+	_, error = db.Exec(query,Id)
+	if error != nil{
+		log.Println(error)
+		return message,error
 	}
-	return msg,err
+	return message,error
 }
 
 
 
 func CheckedinBooks() (types.RequestLists,error){
-	db, err := Connection()
+	db, error := Connection()
 	var requestList types.RequestLists
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return requestList,err
+		return requestList,error
 	}
 	query := "SELECT id,username,bookId FROM requests WHERE status = 'checkin'"
 	var requests []types.Request
 
-	rows , err := db.Query(query)
-	if err != nil {
-		log.Println(err)
-		return requestList,err
+	rows , error := db.Query(query)
+	if error != nil {
+		log.Println(error)
+		return requestList,error
 	}
 	for rows.Next() {
 		var request types.Request
-		err := rows.Scan(&request.Id , &request.Username,&request.BookId)
-		if err != nil {
-			log.Println(err)
-			return requestList,err
+		error := rows.Scan(&request.Id , &request.Username,&request.BookId)
+		if error != nil {
+			log.Println(error)
+			return requestList,error
 		}
 		requests = append(requests, request)
 	}
 	defer rows.Close()
 	
 	requestList.Requests = requests
-	return requestList,err
+	return requestList,error
 }
 
 
 func ApproveCheckin(Id string)error{
-	db, err := Connection()
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return err
+		return error
 	}
 	query := "UPDATE requests SET status = 'returned' WHERE id = ?"
-	_,err = db.Exec(query,Id)
-	if err != nil {
-		log.Println(err)
-		return err
+	_,error = db.Exec(query,Id)
+	if error != nil {
+		log.Println(error)
+		return error
 	}else{
 		query := "UPDATE books SET count = count + 1 WHERE id IN (SELECT bookId FROM requests WHERE id= ?)"
-		_,err = db.Exec(query,Id)
-		if err != nil {
-			log.Println(err)
-			return err
+		_,error = db.Exec(query,Id)
+		if error != nil {
+			log.Println(error)
+			return error
 		}
 	}
-	return err
+	return error
 }
 
 
 func DenyCheckin(Id string)error{
-	db, err := Connection()
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return err
+		return error
 	}
 
 	query := "UPDATE requests SET status = 'owned' WHERE id = ?"
-	_,err = db.Exec(query,Id)
-	if err != nil {
-		log.Println(err)
-		return err
+	_,error = db.Exec(query,Id)
+	if error != nil {
+		log.Println(error)
+		return error
 	}
-	return err
+	return error
 }
 
 func AdminRequestUserIds() (types.Userlist,error){
-	db, err := Connection()
+	db, error := Connection()
 	var userList types.Userlist
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return userList,err
+		return userList,error
 	}
 	query := "SELECT id,username FROM users WHERE adminrequest = 1"
 	var users []types.User
 
-	rows , err := db.Query(query)
-	if err != nil {
-		log.Println(err)
-		return userList,err
+	rows , error := db.Query(query)
+	if error != nil {
+		log.Println(error)
+		return userList,error
 	}
 	for rows.Next() {
 		var user types.User
-		err := rows.Scan(&user.Id , &user.Username)
-		if err != nil {
-			log.Println(err)
-			return userList,err
+		error := rows.Scan(&user.Id , &user.Username)
+		if error != nil {
+			log.Println(error)
+			return userList,error
 		}
 		users = append(users, user)
 	}
 	defer rows.Close()
 	
 	userList.Users = users
-	return userList,err
+	return userList,error
 }
 
 
 func ApproveAdminRequest(Id string)error{
-	db, err := Connection()
+	db, error := Connection()
 
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return err
+		return error
 	}
 	query := "UPDATE users SET admin = 1, adminrequest = 0 WHERE id = ?"
-	_,err = db.Exec(query,Id)
-	if err != nil {
-		log.Println(err)
-		return err
+	_,error = db.Exec(query,Id)
+	if error != nil {
+		log.Println(error)
+		return error
 	}
-	return err
+	return error
 }
 
 func DenyAdminRequest(Id string)error{
-	db, err := Connection()
+	db, error := Connection()
 	log.Println(Id)
-	if err != nil {
+	if error != nil {
 		log.Printf("Error connecting to database")
-		return err
+		return error
 	}
 	query := "UPDATE users SET adminrequest = 0 WHERE id = ?"
-	_,err = db.Exec(query,Id)
-	if err != nil {
-		log.Println(err)
-		return err
+	_,error = db.Exec(query,Id)
+	if error != nil {
+		log.Println(error)
+		return error
 	}
-	return err
+	return error
 }

@@ -8,18 +8,18 @@ import (
 	"LMS/pkg/views"
 )
 
-func Books(w http.ResponseWriter, r *http.Request) {
+func Books(response http.ResponseWriter, request *http.Request) {
 
-	db, err := models.Connection()
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
-		log.Printf("error %s connecting to the database", err)
+	db, error := models.Connection()
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
+		log.Printf("error %s connecting to the database", error)
 	}
-	booksList,err := models.GetBooks(db)
-	if err != nil {
-		http.Redirect(w, r, "/serverError", http.StatusFound)
+	booksList,error := models.GetBooks(db)
+	if error != nil {
+		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 	tempelateFunc := views.GetTemplate("booksPage")
-	t := tempelateFunc()
-	t.Execute(w,booksList)
+	template := tempelateFunc()
+	template.Execute(response,booksList)
 }

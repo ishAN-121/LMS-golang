@@ -8,36 +8,36 @@ import(
 	"LMS/pkg/models"
 )
 
-func Register(w http.ResponseWriter, r *http.Request){
+func Register(response http.ResponseWriter, request *http.Request){
 
-	var err types.Error
-	err.Msg = ""
+	var error types.Error
+	error.Msg = ""
 	tempelateFunc := views.GetTemplate("registerPage")
-	t := tempelateFunc()
-	t.Execute(w,err)
+	template := tempelateFunc()
+	template.Execute(response,error)
 }
 
-func AddUser(w http.ResponseWriter, r *http.Request){
+func AddUser(response http.ResponseWriter, request *http.Request){
 
-	var msg types.Error
-	var err error
+	var message types.Error
+	var error error
 	var user types.User
-	user.Username = r.FormValue("username")
-	user.Password = r.FormValue("password")
-	confirmPassword := r.FormValue("confirmPassword")
+	user.Username = request.FormValue("username")
+	user.Password = request.FormValue("password")
+	confirmPassword := request.FormValue("confirmPassword")
 	
 
 	if (user.Username == "" || user.Password == "" || confirmPassword == ""){
-		msg.Msg = "Enter all the details"
+		message.Msg = "Enter all the details"
 	}else if (user.Password != confirmPassword) {
-		msg.Msg = "Passwords do not match"
+		message.Msg = "Passwords do not match"
 	}else {
-		msg,err = models.AddUser(user.Username, user.Password)
-		if err != nil{
-			http.Redirect(w, r, "/serverError", http.StatusFound)
+		message,error = models.AddUser(user.Username, user.Password)
+		if error != nil{
+			http.Redirect(response, request, "/serverError", http.StatusFound)
 		}
 	}
 	tempelateFunc := views.GetTemplate("registerPage")
-	t := tempelateFunc()
-	t.Execute(w,msg)
+	template := tempelateFunc()
+	template.Execute(response,message)
 }
