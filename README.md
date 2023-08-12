@@ -44,3 +44,10 @@ Add:
 9. `sudo systemctl restart apache2`
 10. `sudo systemctl status apache2`
  Check your_domain_name on your browser
+
+ ## Use Script
+Run in the terminal
+ ```
+ chmod +x script/script.sh
+ ./script/script.sh
+ ```
