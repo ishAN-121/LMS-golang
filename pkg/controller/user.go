@@ -11,9 +11,11 @@ import (
 )
 
 func UserPage(w http.ResponseWriter, r *http.Request){
-	t := views.UserPage()
+	
 	var user types.User
 	user.Username = r.Header.Get("username")
+	tempelateFunc := views.GetTemplate("userPage")
+	t := tempelateFunc()
 	t.Execute(w,user)
 }
 
@@ -28,11 +30,13 @@ func CheckoutPage(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
-	t := views.CheckoutPage()
+	
 	var error types.Error
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = error.Msg
+	tempelateFunc := views.GetTemplate("checkoutPage")
+	t := tempelateFunc()
 	t.Execute(w,data)
 }
 
@@ -62,7 +66,8 @@ func Checkout(w http.ResponseWriter, r *http.Request){
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = msg.Msg
-	t := views.CheckoutPage()
+	tempelateFunc := views.GetTemplate("checkoutPage")
+	t := tempelateFunc()
 	t.Execute(w,data)
 	
 }
@@ -79,7 +84,8 @@ func CheckinPage(w http.ResponseWriter, r *http.Request){
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = msg.Msg
-	t := views.CheckinPage()
+	tempelateFunc := views.GetTemplate("checkinPage")
+	t := tempelateFunc()
 	t.Execute(w,data)
 }
 
@@ -102,7 +108,8 @@ func IssuedBooks(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
-	t := views.IssuedBooks()
+	tempelateFunc := views.GetTemplate("issuedBooks")
+	t := tempelateFunc()
 	t.Execute(w,booksList)
 }
 
@@ -110,6 +117,7 @@ func MakeAdminRequest(w http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
 	models.AdminRequest(user.Username)
-	t := views.UserPage()
+	tempelateFunc := views.GetTemplate("userPage")
+	t := tempelateFunc()
 	t.Execute(w,user)
 }

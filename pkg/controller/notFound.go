@@ -6,6 +6,7 @@ import (
 )
 
 func NotFound(w http.ResponseWriter, r *http.Request){
-	t := views.NotFoundPage()
+	tempelateFunc := views.GetTemplate("notFoundPage")
+	t := tempelateFunc()
 	t.Execute(w,nil)
 }

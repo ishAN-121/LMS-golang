@@ -36,8 +36,10 @@
         <td>{{.Username}}</td>
         <td>Checkin</td>
         <td><form action="/approveCheckin" method="POST">  <input type="hidden" name="requestIds" value="{{.Id}}"class="form-control"/>
+          <input type="hidden" name="approve" value="true" class="form-control"/>
         <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Accept </button></form></td>
-        <td><form action="/denyCheckin" method="POST">  <input type="hidden" name="requestIds" value="{{.Id}}"class="form-control"/>
+        <td><form action="/approveCheckin" method="POST">  <input type="hidden" name="requestIds" value="{{.Id}}"class="form-control"/>
+          <input type="hidden" name="approve" value="false" class="form-control"/>
             <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Deny </button></form></td>
             
         

@@ -9,7 +9,7 @@ import (
 )
 
 func Books(w http.ResponseWriter, r *http.Request) {
-	t := views.Books()
+
 	db, err := models.Connection()
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
@@ -19,5 +19,7 @@ func Books(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
-	t.Execute(w, booksList)
+	tempelateFunc := views.GetTemplate("booksPage")
+	t := tempelateFunc()
+	t.Execute(w,booksList)
 }

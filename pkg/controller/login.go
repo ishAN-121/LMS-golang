@@ -11,9 +11,10 @@ import (
 )
 
 func LoginPage(w http.ResponseWriter, r *http.Request){
-	t := views.LoginPage()
 	var err types.Error
 	err.Msg = ""
+	tempelateFunc := views.GetTemplate("loginPage")
+	t := tempelateFunc()
 	t.Execute(w,err)
 }
 
@@ -35,8 +36,9 @@ func Login(w http.ResponseWriter, r *http.Request){
 	}
 
 	if ((msg.Msg != "")&& (msg.Msg != "Login successful")){
-	t := views.LoginPage()
-	t.Execute(w,err)
+		tempelateFunc := views.GetTemplate("login")
+		t := tempelateFunc()
+		t.Execute(w,err)
 	}else{
 
 		if !user.Admin{

@@ -43,21 +43,23 @@
         <td>{{.Copies}}</td>
         <td>{{.Totalcount}}</td>
         <td>
-          <form action="/addBook" method="POST">
+          <form action="/updateBook" method="POST">
             <div class="d-flex justify-content-center mb-3">
               <div class="col-sm-8 p-1">
                 <input type="number" class="form-control" name = "copies" id="inlineFormInputName" placeholder="123">
                 <input type = "hidden" name = "title" value = "{{.Title}}" class="form-control" >
                 <input type = "hidden" name = "author" value = "{{.Author}}" class="form-control" >
+                <input type="hidden" name="update" value="add" class="form-control"/>
               </div>
               <div class="col-auto p-1">
                 <button type="submit" class="btn btn-outline-primary btn-sm m-1">Add</button>
               </div></form></td>
-        <td><form action="/deleteBook" method="POST"> 
+        <td><form action="/updateBook" method="POST"> 
           <div class="d-flex justify-content-center mb-3"><div class="col-sm-8 p-1">
             <input type="number" class="form-control" name="copies" id="floatingInput" placeholder="123">
             <input type = "hidden" name = "title" value = "{{.Title}}" class="form-control" >
             <input type = "hidden" name = "author" value = "{{.Author}}" class="form-control">
+            <input type="hidden" name="update" value="delete" class="form-control"/>
             </div>
           <div class="col-auto p-1"><button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Delete</button></div></form></td>
      </tr>

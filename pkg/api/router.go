@@ -24,7 +24,7 @@ func Start(){
 	//Middleware methods
 
 	r.HandleFunc("/user",controller.Middleware(controller.IsUser(controller.UserPage))).Methods("GET")
-	r.HandleFunc("/books",controller.Middleware(controller.IsUser(controller.Books))).Methods("GET")
+	r.HandleFunc("/books",controller.Middleware((controller.Books))).Methods("GET")
 	r.HandleFunc("/checkout", controller.Middleware(controller.IsUser(controller.CheckoutPage))).Methods("GET")
 	r.HandleFunc("/checkin", controller.Middleware(controller.IsUser(controller.CheckinPage))).Methods("GET")
 	r.HandleFunc("/issuedBooks", controller.Middleware(controller.IsUser(controller.IssuedBooks))).Methods("GET")
@@ -44,19 +44,14 @@ func Start(){
 	r.HandleFunc("/updateBookPage",controller.Middleware(controller.IsAdmin((controller.UpdateBookPage)))).Methods("GET")
 	
 	r.HandleFunc("/addNewBook",controller.Middleware(controller.IsAdmin((controller.AddNewBook)))).Methods("POST")
-	r.HandleFunc("/addBook",controller.Middleware(controller.IsAdmin((controller.AddBook)))).Methods("POST")
-	r.HandleFunc("/deleteBook",controller.Middleware(controller.IsAdmin((controller.DeleteBook)))).Methods("POST")
+	r.HandleFunc("/updateBook",controller.Middleware(controller.IsAdmin((controller.AddBook)))).Methods("POST")
 	r.HandleFunc("/approveCheckout",controller.Middleware(controller.IsAdmin((controller.ApproveCheckout)))).Methods("POST")
-	r.HandleFunc("/denyCheckout",controller.Middleware(controller.IsAdmin((controller.DenyCheckout)))).Methods("POST")
 	r.HandleFunc("/approveCheckin",controller.Middleware(controller.IsAdmin((controller.ApproveCheckin)))).Methods("POST")
-	r.HandleFunc("/denyCheckin",controller.Middleware(controller.IsAdmin((controller.DenyCheckin)))).Methods("POST")
 	r.HandleFunc("/approveAdminRequest",controller.Middleware(controller.IsAdmin((controller.ApproveAdminRequest)))).Methods("POST")
-	r.HandleFunc("/denyAdminRequest",controller.Middleware(controller.IsAdmin((controller.DenyAdminRequest)))).Methods("POST")
-
 
 	r.HandleFunc("/serverError",controller.ServerError).Methods("GET")
 	r.NotFoundHandler = http.HandlerFunc(controller.NotFound)
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":8000", r)
 
 }

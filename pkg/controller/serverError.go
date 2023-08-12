@@ -6,6 +6,7 @@ import (
 )
 
 func ServerError(w http.ResponseWriter, r *http.Request){
-	t := views.ServerErrorPage()
+	tempelateFunc := views.GetTemplate("serverErrorPage")
+	t := tempelateFunc()
 	t.Execute(w,nil)
 }

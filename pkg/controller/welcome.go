@@ -7,6 +7,7 @@ import (
 )
 
 func Welcome(w http.ResponseWriter, r *http.Request){
-	t := views.StartPage()
+	tempelateFunc := views.GetTemplate("startPage")
+	t := tempelateFunc()
 	t.Execute(w,nil)
 }

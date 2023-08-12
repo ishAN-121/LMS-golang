@@ -9,9 +9,11 @@ import(
 )
 
 func Register(w http.ResponseWriter, r *http.Request){
-	t := views.RegisterPage()
+
 	var err types.Error
 	err.Msg = ""
+	tempelateFunc := views.GetTemplate("registerPage")
+	t := tempelateFunc()
 	t.Execute(w,err)
 }
 
@@ -35,6 +37,7 @@ func AddUser(w http.ResponseWriter, r *http.Request){
 			http.Redirect(w, r, "/serverError", http.StatusFound)
 		}
 	}
-	t := views.RegisterPage()
+	tempelateFunc := views.GetTemplate("registerPage")
+	t := tempelateFunc()
 	t.Execute(w,msg)
 }
