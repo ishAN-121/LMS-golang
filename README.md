@@ -45,9 +45,11 @@ Add:
 10. `sudo systemctl status apache2`
  Check your_domain_name on your browser
 
- ## Use Script
-Run in the terminal
+ ## Use Script for Automating Setup
+Run in the terminal to start the server.
  ```
  chmod +x script/script.sh
  ./script/script.sh
  ```
+
+ chmod will provide the permissions to the script to run.The next command  will setup the database and start the go server.
