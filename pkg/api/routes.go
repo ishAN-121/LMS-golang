@@ -23,16 +23,16 @@ func Start(){
 
 	//Middleware methods
 
-	r.HandleFunc("/user",controller.Middleware(controller.UserPage)).Methods("GET")
-	r.HandleFunc("/books",controller.Middleware(controller.Books)).Methods("GET")
-	r.HandleFunc("/checkout", controller.Middleware(controller.CheckoutPage)).Methods("GET")
-	r.HandleFunc("/checkin", controller.Middleware(controller.CheckinPage)).Methods("GET")
-	r.HandleFunc("/issuedBooks", controller.Middleware(controller.IssuedBooks)).Methods("GET")
-	r.HandleFunc("/makeAdminRequest", controller.Middleware(controller.MakeAdminRequest)).Methods("GET")
+	r.HandleFunc("/user",controller.Middleware(controller.IsUser(controller.UserPage))).Methods("GET")
+	r.HandleFunc("/books",controller.Middleware(controller.IsUser(controller.Books))).Methods("GET")
+	r.HandleFunc("/checkout", controller.Middleware(controller.IsUser(controller.CheckoutPage))).Methods("GET")
+	r.HandleFunc("/checkin", controller.Middleware(controller.IsUser(controller.CheckinPage))).Methods("GET")
+	r.HandleFunc("/issuedBooks", controller.Middleware(controller.IsUser(controller.IssuedBooks))).Methods("GET")
+	r.HandleFunc("/makeAdminRequest", controller.Middleware(controller.IsUser(controller.MakeAdminRequest))).Methods("GET")
 	r.HandleFunc("/logout", controller.Middleware(controller.Logout)).Methods("GET")
 
-	r.HandleFunc("/checkout", controller.Middleware(controller.Checkout)).Methods("POST")
-	r.HandleFunc("/checkin", controller.Middleware(controller.Checkin)).Methods("POST")
+	r.HandleFunc("/checkout", controller.Middleware(controller.IsUser(controller.Checkout))).Methods("POST")
+	r.HandleFunc("/checkin", controller.Middleware(controller.IsUser(controller.Checkin))).Methods("POST")
 
 	//MIddleWare and IsAdmin methods
 

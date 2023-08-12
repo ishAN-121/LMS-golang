@@ -64,3 +64,13 @@ func IsAdmin(next http.HandlerFunc)http.HandlerFunc {
 		}
 	}
 }
+
+func IsUser(next http.HandlerFunc)http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !admin{
+			next(w,r)
+		}else{
+			http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		}
+	}
+}
