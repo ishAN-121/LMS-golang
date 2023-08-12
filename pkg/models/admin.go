@@ -20,12 +20,12 @@ func AddNewBook(title,author string , copies int) (types.Error,error){
 		return message,error
 	}
 	if exists{
-		message.Msg = "Book Already exists"
+		message.Message = "Book Already exists"
 		return message,error
 	}else{
 		query := "INSERT INTO books (author,title,count,totalcount) VALUES (?, ?, ?, ?)"
 		_ = db.QueryRow(query,author,title,copies,copies)
-		message.Msg = "Added Successfully"
+		message.Message = "Added Successfully"
 		return message,error
 	}
 }
@@ -41,7 +41,7 @@ func AddBook(title,author string , copies int) (types.Error,error){
 	
 	query := "UPDATE books SET count = count + ?, totalcount = totalcount + ? WHERE author = ? AND title= ? "
 	_ = db.QueryRow(query,copies,copies,author,title)
-	message.Msg = "Added Successfully"
+	message.Message = "Added Successfully"
 	return message,error
 }
 
@@ -63,18 +63,18 @@ func DeleteBook(title,author string , copies int) (types.Error,error){
 	
 	if (count != 0 ){
 		if(copies > count){
-			message.Msg = "Too many copies for deletion"
+			message.Message = "Too many copies for deletion"
 			return message,error
 		}else{
 			query := "UPDATE books SET count = count - ?, totalcount = totalcount - ? WHERE author = ? AND title = ? "
 			
 			_ = db.QueryRow(query,copies,copies,author,title)
-			message.Msg = "Deletion Successful"
+			message.Message = "Deletion Successful"
 			return message,error
 		}
 
 	}else{
-		message.Msg = "Book not available for deletion"
+		message.Message = "Book not available for deletion"
 		return message,error
 	}
 }
@@ -133,7 +133,7 @@ func ApproveCheckout(Id string) (types.Error,error) {
 			return message,error
 	}else{
 		if count == 0 {
-			message.Msg = "Book not available to checkout"
+			message.Message = "Book not available to checkout"
 			return message,error
 		}else{
 			query = "UPDATE requests SET status = 'owned' WHERE id = ?"
@@ -160,7 +160,7 @@ return message,error
 func DenyCheckout(Id string) (types.Error,error) {
 	db, error := Connection()
 	var message types.Error
-	message.Msg = ""
+	message.Message = ""
 	if error != nil {
 		log.Printf("Error connecting to database")
 		return message,error

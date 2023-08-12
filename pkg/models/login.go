@@ -17,7 +17,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 	var message types.Error
 
 	if error != nil {
-		message.Msg = "Error in connecting to database"
+		message.Message = "Error in connecting to database"
 		return false, message, error
 	}
 	defer db.Close()
@@ -43,7 +43,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 		}
 		error = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password))
 		if error != nil {
-		message.Msg = "wrong password"
+		message.Message = "wrong password"
 		return false, message, error
 		}else{
 			sessionId := uuid.New().String()
@@ -63,11 +63,11 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 			}
 			db.Exec("INSERT INTO cookies (sessionId, userId, username) VALUES (?, ?,?)", sessionId, id,username)
 			
-			message.Msg = "Login successful"
+			message.Message = "Login successful"
 			return admin,message,error
 		}
 	}else{
-		message.Msg = "Username does not exist"
+		message.Message = "Username does not exist"
 		return false,message , error
 	}
 }

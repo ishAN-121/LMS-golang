@@ -37,7 +37,7 @@
         <th scope="row">{{.Id}}</th>
         <td>{{.Title}}</td>
         <td>{{.Author}}</td>
-        <td><form action="/checkout" method="POST">  <input type="hidden" name="bookIds" value="{{.Id}}" class="form-control"/>
+        <td><form action="/checkout" method="POST">  <input type="hidden" name="book_ids" value="{{.Id}}" class="form-control"/>
         <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Checkout</button></form></td>
      </tr>
       {{ end}}

@@ -11,7 +11,7 @@ import(
 func Register(response http.ResponseWriter, request *http.Request){
 
 	var error types.Error
-	error.Msg = ""
+	error.Message = ""
 	tempelateFunc := views.GetTemplate("registerPage")
 	template := tempelateFunc()
 	template.Execute(response,error)
@@ -24,13 +24,13 @@ func AddUser(response http.ResponseWriter, request *http.Request){
 	var user types.User
 	user.Username = request.FormValue("username")
 	user.Password = request.FormValue("password")
-	confirmPassword := request.FormValue("confirmPassword")
+	confirmPassword := request.FormValue("confirm_password")
 	
 
 	if (user.Username == "" || user.Password == "" || confirmPassword == ""){
-		message.Msg = "Enter all the details"
+		message.Message = "Enter all the details"
 	}else if (user.Password != confirmPassword) {
-		message.Msg = "Passwords do not match"
+		message.Message = "Passwords do not match"
 	}else {
 		message,error = models.AddUser(user.Username, user.Password)
 		if error != nil{

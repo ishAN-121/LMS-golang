@@ -31,10 +31,10 @@
       <tr>
         <th scope="row">{{.Id}}</th>
         <td>{{.Username}}</td>
-        <td><form action="/approveAdminRequest" method="POST">  <input type="hidden" name="userIds" value="{{.Id}}"class="form-control"/>
+        <td><form action="/approveAdminRequest" method="POST">  <input type="hidden" name="user_ids" value="{{.Id}}"class="form-control"/>
           <input type="hidden" name="approve" value="true" class="form-control"/>
         <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Accept </button></form></td>
-        <td><form action="/approveAdminRequest" method="POST">  <input type="hidden" name="userIds" value="{{.Id}}"class="form-control"/>
+        <td><form action="/approveAdminRequest" method="POST">  <input type="hidden" name="user_ids" value="{{.Id}}"class="form-control"/>
           <input type="hidden" name="approve" value="false" class="form-control"/>
             <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Deny </button></form></td>
             

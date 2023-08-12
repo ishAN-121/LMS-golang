@@ -34,7 +34,7 @@ func CheckoutPage(response http.ResponseWriter, r *http.Request){
 	var message types.Error
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = message.Msg
+	data.Error = message.Message
 	tempelateFunc := views.GetTemplate("checkoutPage")
 	t := tempelateFunc()
 	t.Execute(response,data)
@@ -42,7 +42,7 @@ func CheckoutPage(response http.ResponseWriter, r *http.Request){
 
 func Checkout(response http.ResponseWriter, r *http.Request){
 	var bookRequest types.Request
-	bookId_str := r.FormValue("bookIds")
+	bookId_str := r.FormValue("book_ids")
 	bookRequest.Username = r.Header.Get("username")
 
 	db, error := models.Connection()
@@ -65,7 +65,7 @@ func Checkout(response http.ResponseWriter, r *http.Request){
 	
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = message.Msg
+	data.Error = message.Message
 	tempelateFunc := views.GetTemplate("checkoutPage")
 	t := tempelateFunc()
 	t.Execute(response,data)
@@ -83,7 +83,7 @@ func CheckinPage(response http.ResponseWriter, r *http.Request){
 	var message types.Error
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = message.Msg
+	data.Error = message.Message
 	tempelateFunc := views.GetTemplate("checkinPage")
 	t := tempelateFunc()
 	t.Execute(response,data)
@@ -91,7 +91,7 @@ func CheckinPage(response http.ResponseWriter, r *http.Request){
 
 func Checkin (response http.ResponseWriter, r *http.Request){
 	var bookRequest types.Request
-	bookIdstr := r.FormValue("bookIds")
+	bookIdstr := r.FormValue("book_ids")
 	bookRequest.Username = r.Header.Get("username")
 
 	

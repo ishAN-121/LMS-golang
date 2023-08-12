@@ -3,7 +3,7 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `hash` varchar(255) NOT NULL,
   `admin` BOOLEAN DEFAULT FALSE,
-  `adminrequest` BOOLEAN DEFAULT FALSE,
+  `adminRequest` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE INDEX secondary ON users (username);
@@ -12,7 +12,7 @@ CREATE TABLE `books` (
   `title` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL,
   `count` int(11)  DEFAULT 1,
-  `totalcount` int(11) DEFAULT 1,
+  `totalCount` int(11) DEFAULT 1,
   PRIMARY KEY (`id`)
   )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

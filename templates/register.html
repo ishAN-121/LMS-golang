@@ -22,22 +22,22 @@
           </div><br>
           <div class="form-group">
             <label for="floatingPassword">Confirm Password</label>
-            <input type="password" class="form-control" name = "confirmPassword" id="floatingPassword" placeholder="Password">
+            <input type="password" class="form-control" name = "confirm_password" id="floatingPassword" placeholder="Password">
           </div><br>
-          {{if ne .Msg ""}}
-          {{if ne .Msg "Registered Successfully"}}
+          {{if ne .Message ""}}
+          {{if ne .Message "Registered Successfully"}}
             <div class="alert alert-warning" role="alert">
-              {{ .Msg }}
+              {{ .Message }}
             </div>
             {{ end}}
-          {{if eq .Msg "Registered Successfully"}}
+          {{if eq .Message "Registered Successfully"}}
             <div class="alert alert-warning" role="alert">
-              {{ .Msg }}
+              {{ .Message }}
             </div>
           {{end}}
           {{end}}
           <button class="btn btn-primary" type="submit" value = "Sign Up">Register</button>
-          {{if eq .Msg "Registered Successfully"}}
+          {{if eq .Message "Registered Successfully"}}
           <div class = "links">
            <a href = "login"><button type="button" class="btn btn-secondary">Login</button></a> 
          {{end}}

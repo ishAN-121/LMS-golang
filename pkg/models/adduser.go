@@ -35,7 +35,7 @@ func AddUser(username, password string) (types.Error,error) {
 	}
 
 	if exists {
-		message.Msg = "User already exists"
+		message.Message = "User already exists"
 		return message,error
 	} else {
 		hashedPassword, error := hashPassword(password)
@@ -47,7 +47,7 @@ func AddUser(username, password string) (types.Error,error) {
 		if error != nil {
 			log.Println(error)
 		} else {
-			message.Msg = "Registered Successfully"
+			message.Message = "Registered Successfully"
 			return message,error
 		}
 		return message,error

@@ -22,7 +22,7 @@ func AdminPage(response http.ResponseWriter, request *http.Request){
 func AddNewBookPage(response http.ResponseWriter, request *http.Request){
 	
 	var error types.Error
-	error.Msg = ""
+	error.Message = ""
 	tempelateFunc := views.GetTemplate("addNewBookPage")
 	template := tempelateFunc()
 	template.Execute(response,error)
@@ -60,14 +60,14 @@ func AddNewBook(response http.ResponseWriter, request *http.Request){
 	
 
 	if (book.Title == "" || book.Author == "" || Copies_str == ""){
-		message.Msg  = "Invalid Inputs"
+		message.Message  = "Invalid Inputs"
 	}
 
 	book.Copies,_= strconv.Atoi(Copies_str)
 	if (book.Copies < 0 ){
-		message.Msg  = "Can'template have negative copies"
+		message.Message  = "Can'template have negative copies"
 	}
-	if (message.Msg == "") {
+	if (message.Message == "") {
 	message, error = models.AddNewBook(book.Title,book.Author,book.Copies)
 	if error != nil {
 		http.Redirect(response, request, "/serverError", http.StatusFound)
@@ -87,7 +87,7 @@ func AddBook(response http.ResponseWriter, request *http.Request){
 
 	book.Title = request.FormValue("title")
 	book.Author = request.FormValue("author")
-	Copies_str := request.FormValue("copies")
+	copiesStr := request.FormValue("copies")
 	updateBookType := request.FormValue("update")
 	
 
@@ -97,15 +97,15 @@ func AddBook(response http.ResponseWriter, request *http.Request){
 		log.Printf("error %s connecting to the database", error)
 	}
 
-	if (book.Title == "" || book.Author == "" || Copies_str == ""){
-		message.Msg  = "Invalid Inputs"
+	if (book.Title == "" || book.Author == "" || copiesStr == ""){
+		message.Message  = "Invalid Inputs"
 	}
-	book.Copies,_ = strconv.Atoi(Copies_str)
+	book.Copies,_ = strconv.Atoi(copiesStr)
 	
 	if (book.Copies < 0 ){
-		message.Msg  = "Copies can not be negative"
+		message.Message  = "Copies can not be negative"
 	}
-	if (message.Msg == "") {
+	if (message.Message == "") {
 		if (updateBookType == "add"){
 	message,error = models.AddBook(book.Title,book.Author,book.Copies)
 	if error != nil {
@@ -128,7 +128,7 @@ func AddBook(response http.ResponseWriter, request *http.Request){
 
 	var data types.Data
 	data.Books = booksList.Books
-	data.Error = message.Msg
+	data.Error = message.Message
 	tempelateFunc := views.GetTemplate("updateBookPage")
 	template := tempelateFunc()
 	template.Execute(response,data)
@@ -149,7 +149,7 @@ func AdminCheckout(response http.ResponseWriter, request *http.Request){
 
 func ApproveCheckout(response http.ResponseWriter, request *http.Request){
 	var bookRequest types.Request
-	bookRequest.Id = request.FormValue("requestIds")
+	bookRequest.Id = request.FormValue("request_ids")
 	approveType := request.FormValue("approve")
 	var data types.Data
 	var message types.Error
@@ -164,7 +164,7 @@ func ApproveCheckout(response http.ResponseWriter, request *http.Request){
 	if error != nil {
 		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
-	data.Error = message.Msg
+	data.Error = message.Message
 	requestedBooks,error := models.RequestedBooks()
 	if error != nil {
 		http.Redirect(response, request, "/serverError", http.StatusFound)
@@ -189,7 +189,7 @@ func AdminCheckin(response http.ResponseWriter, request *http.Request){
 
 func ApproveCheckin(response http.ResponseWriter, request *http.Request){
 	var bookRequest types.Request
-	bookRequest.Id = request.FormValue("requestIds")
+	bookRequest.Id = request.FormValue("request_ids")
 	approveType := request.FormValue("approve")
 	if (approveType == "true"){
 		models.ApproveCheckin(bookRequest.Id)
@@ -212,7 +212,7 @@ func AdminRequest(response http.ResponseWriter, request *http.Request){
 
 func ApproveAdminRequest(response http.ResponseWriter, request *http.Request){
 	var adminRequest types.Request
-	adminRequest.Id = request.FormValue("userIds")
+	adminRequest.Id = request.FormValue("user_ids")
 	approveType := request.FormValue("approve")
 	if (approveType == "true"){
 		models.ApproveAdminRequest(adminRequest.Id)

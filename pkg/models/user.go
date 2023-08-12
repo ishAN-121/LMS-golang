@@ -21,7 +21,7 @@ func Checkout(username string, bookId int) (types.Error , error) {
 		error = db.QueryRow(query, bookId, username).Scan(&exists)
 		fmt.Println(error)
 		if exists {
-			message.Msg = "Already Requested or Owned"
+			message.Message = "Already Requested or Owned"
 			return message,error
 		} else {
 			query := "INSERT INTO requests (bookId , username , status) VALUES (?,?, 'requested');"
@@ -29,7 +29,7 @@ func Checkout(username string, bookId int) (types.Error , error) {
 			if error != nil {
 				log.Println(error)
 			}  else {
-					message.Msg = "Book checked out"
+					message.Message = "Book checked out"
 					return message,error
 				}
 			}

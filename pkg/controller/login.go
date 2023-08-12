@@ -12,7 +12,7 @@ import (
 
 func LoginPage(response http.ResponseWriter, request *http.Request){
 	var error types.Error
-	error.Msg = ""
+	error.Message = ""
 	tempelateFunc := views.GetTemplate("loginPage")
 	template := tempelateFunc()
 	template.Execute(response,error)
@@ -27,7 +27,7 @@ func Login(response http.ResponseWriter, request *http.Request){
 	user.Password = request.FormValue("password")
 
 	if (user.Username == "" || user.Password == "" ){
-		message.Msg = "Enter all the details"
+		message.Message = "Enter all the details"
 	}
 
 	user.Admin, message,error = models.Authenticate(response,request,user.Username,user.Password)
@@ -35,7 +35,7 @@ func Login(response http.ResponseWriter, request *http.Request){
 		http.Redirect(response, request, "/serverError", http.StatusFound)
 	}
 
-	if ((message.Msg != "")&& (message.Msg != "Login successful")){
+	if ((message.Message != "")&& (message.Message != "Login successful")){
 		tempelateFunc := views.GetTemplate("login")
 		template := tempelateFunc()
 		template.Execute(response,error)

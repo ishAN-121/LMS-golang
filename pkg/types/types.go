@@ -1,6 +1,6 @@
 package types
 type Error struct {
-	Msg string `json:"msg"`
+	Message string `json:"msg"`
 }
 
 type User struct{
@@ -17,7 +17,7 @@ type Book struct{
 	Title string `json:"title"`
 	Author string `json:"author"`
 	Copies int `json:"copies"`
-	Totalcount int `json:"totalcount"`	
+	Totalcount int `json:"total_count"`	
 }
 
 type ListBooks struct {
@@ -27,7 +27,7 @@ type ListBooks struct {
 
 type Request struct{
 	Id string `json:"id"`
-	BookId int `json:"bookid"`
+	BookId int `json:"book_id"`
 	Username string `json:"username"`
 	Status string `json:"status"`
 }
@@ -43,5 +43,5 @@ type Data struct {
 }
 
 type AdminRequest struct {
-	Adminrequest bool `json:"adminrequest"`
+	Adminrequest bool `json:"admin_request"`
 }
