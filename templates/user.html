@@ -14,15 +14,15 @@
     <div class = "justify-content-end"></div>
     <a class="navbar-brand" href="logout"><button type="button" class="btn btn-secondary">Logout</button></a>
     </nav>
-    <h1 class="title"><div class = "center">HELLO, {{ .Username }}</div>
+    <h1 class="title"><div class = "center">Hello, {{ .Username }}</div>
     </h1>
     <div class="full-page center">
         <div class="abc">
-            <a href="books"><button type="button" class="w-100 btn btn-secondary">VIEW BOOKS</button><br></a>
-            <a href="checkout"><button type="button" class="w-100 btn btn-secondary">CHECKOUT</button><br></a>
-            <a href="checkin"><button type="button" class="w-100 btn btn-secondary">CHECKIN</button><br></a>
-            <a href="issuedbooks"><button type="button" class="w-100 btn btn-secondary">VIEW ISSUED BOOKS</button><br></a>
-            <button type="button" class="w-100 btn btn-secondary" id="makeAdminButton">MAKE ADMIN REQUEST</button><br>
+            <a href="books"><button type="button" class="w-100 btn btn-secondary">View Books</button><br></a>
+            <a href="checkout"><button type="button" class="w-100 btn btn-secondary">Checkout</button><br></a>
+            <a href="checkin"><button type="button" class="w-100 btn btn-secondary">Checkin</button><br></a>
+            <a href="issuedBooks"><button type="button" class="w-100 btn btn-secondary">View Issued Books</button><br></a>
+            <button type="button" class="w-100 btn btn-secondary" id="makeAdminButton">Make Admin Request</button><br>
            
         </div>
 
@@ -45,7 +45,7 @@
             // window.location.reload();
 
             var a = document.createElement("a");
-            a.href = "/makeadminrequest"
+            a.href = "/makeAdminRequest"
             a.click()
         })
 

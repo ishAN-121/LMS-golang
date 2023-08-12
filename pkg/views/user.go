@@ -4,23 +4,23 @@ import (
 	"html/template"
 )
 
-func Userpage() *template.Template {
+func UserPage() *template.Template {
 	temp := template.Must(template.ParseFiles("templates/user.html"))
 	return temp
 }
 
-func Checkoutpage() *template.Template {
+func CheckoutPage() *template.Template {
 	temp := template.Must(template.ParseFiles("templates/checkout.html"))
 	return temp
 }
 
-func Checkinpage() *template.Template {
+func CheckinPage() *template.Template {
 	temp := template.Must(template.ParseFiles("templates/checkin.html"))
 	return temp
 }
 
 
-func Issuedbooks() *template.Template {
-	temp := template.Must(template.ParseFiles("templates/issuedbooks.html"))
+func IssuedBooks() *template.Template {
+	temp := template.Must(template.ParseFiles("templates/issuedBooks.html"))
 	return temp
 }

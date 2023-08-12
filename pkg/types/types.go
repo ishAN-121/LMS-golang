@@ -27,7 +27,7 @@ type ListBooks struct {
 
 type Request struct{
 	Id string `json:"id"`
-	Bookid string `json:"bookid"`
+	BookId int `json:"bookid"`
 	Username string `json:"username"`
 	Status string `json:"status"`
 }

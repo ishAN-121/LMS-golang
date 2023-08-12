@@ -31,25 +31,25 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 		return false, msg, err
 	}
 	if exists {
-		var hashedpass string 
+		var hashedPass string 
 		var admin bool
 
 		query := "SELECT hash,admin FROM users WHERE username = ?"
 
-		err = db.QueryRow(query, username).Scan(&hashedpass , &admin)
+		err = db.QueryRow(query, username).Scan(&hashedPass , &admin)
 		if err != nil {
 		log.Println(err)
 		return false, msg, err
 		}
-		err = bcrypt.CompareHashAndPassword([]byte(hashedpass), []byte(password))
+		err = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password))
 		if err != nil {
 		msg.Msg = "wrong password"
 		return false, msg, err
 		}else{
-			session_id := uuid.New().String()
+			sessionId := uuid.New().String()
 			cookie := http.Cookie{
-				Name:     "SessionID",
-				Value:    session_id,
+				Name:     "sessionId",
+				Value:    sessionId,
 				Expires:  time.Now().Add(24 * time.Hour), 
 				HttpOnly: true,                           
 			}
@@ -61,7 +61,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request,username , password str
 				log.Println(err)
 				return false, msg, err
 			}
-			db.Exec("INSERT INTO cookies (sessionId, userId, username) VALUES (?, ?,?)", session_id, id,username)
+			db.Exec("INSERT INTO cookies (sessionId, userId, username) VALUES (?, ?,?)", sessionId, id,username)
 			
 			msg.Msg = "Login successful"
 			return admin,msg,err

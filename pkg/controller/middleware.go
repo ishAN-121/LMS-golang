@@ -3,7 +3,7 @@ package controller
 import (
 	
 	"LMS/pkg/models"
-	
+	"LMS/pkg/types"
 	
 	"net/http"
 )
@@ -15,12 +15,14 @@ func Middleware (next http.HandlerFunc) http.HandlerFunc {
 		if(len(cookie) < 10){
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else{
-			cookieid := r.Header.Get("Cookie")[10:]
-			var user_exists bool
-			var username string
-			username,user_exists,admin = models.Middleware(cookieid)
-			if user_exists{
-				r.Header.Add("username", username)
+			cookieId := r.Header.Get("Cookie")[10:]
+			var userExists bool
+			var user types.User
+
+			user.Username,userExists,user.Admin = models.Middleware(cookieId)
+			admin = user.Admin
+			if userExists{
+				r.Header.Add("username", user.Username)
 				next(w,r)
 		
 			}
@@ -29,7 +31,7 @@ func Middleware (next http.HandlerFunc) http.HandlerFunc {
    	}
 }
 
-func Middleware_direct(next http.HandlerFunc)http.HandlerFunc {
+func MiddlewareDirect(next http.HandlerFunc)http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie :=  r.Header.Get("Cookie")
 		
@@ -38,10 +40,11 @@ func Middleware_direct(next http.HandlerFunc)http.HandlerFunc {
 		}else{
 			cookieid := r.Header.Get("Cookie")[10:]
 			var user_exists bool
-			var username string
-			username,user_exists,admin = models.Middleware(cookieid)
+			var user types.User
+			user.Username,user_exists,user.Admin = models.Middleware(cookieid)
+			admin = user.Admin
 			if user_exists{
-				r.Header.Add("username", username)
+				r.Header.Add("username", user.Username)
 				if admin{
 					http.Redirect(w, r, "/admin", http.StatusSeeOther)
 				}else{
@@ -52,7 +55,7 @@ func Middleware_direct(next http.HandlerFunc)http.HandlerFunc {
 	}
 }
 
-func Is_admin(next http.HandlerFunc)http.HandlerFunc {
+func IsAdmin(next http.HandlerFunc)http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if admin{
 			next(w,r)

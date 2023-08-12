@@ -4,37 +4,33 @@ import (
 	"html/template"
 )
 
-func Adminpage() *template.Template {
+func AdminPage() *template.Template {
 	temp := template.Must(template.ParseFiles("templates/admin.html"))
 	return temp
 }
 
-func AddNewbookpage() *template.Template {
+func AddNewBookPage() *template.Template {
 	temp := template.Must(template.ParseFiles("templates/addNewBook.html"))
 	return temp
 }
 
-func Deletebookpage() *template.Template {
-	temp := template.Must(template.ParseFiles("templates/update-delete.html"))
+
+func AdminCheckout() *template.Template {
+	temp := template.Must(template.ParseFiles("templates/adminCheckout.html"))
 	return temp
 }
 
-func Admincheckout() *template.Template {
-	temp := template.Must(template.ParseFiles("templates/admin-checkout.html"))
+func AdminCheckin() *template.Template {
+	temp := template.Must(template.ParseFiles("templates/adminCheckin.html"))
 	return temp
 }
 
-func Admincheckin() *template.Template {
-	temp := template.Must(template.ParseFiles("templates/admin-checkin.html"))
+func AdminRequest () *template.Template {
+	temp := template.Must(template.ParseFiles("templates/adminRequest.html"))
 	return temp
 }
 
-func Adminrequest () *template.Template {
-	temp := template.Must(template.ParseFiles("templates/adminrequest.html"))
-	return temp
-}
-
-func AddDeleteBookPage () *template.Template {
-	temp := template.Must(template.ParseFiles("templates/addDeleteBook.html"))
+func UpdateBookPage () *template.Template {
+	temp := template.Must(template.ParseFiles("templates/updateBook.html"))
 	return temp
 }

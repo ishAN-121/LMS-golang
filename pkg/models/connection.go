@@ -14,7 +14,7 @@ import (
 )
 
 func dsn() string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", config.Config.DB_USERNAME, config.Config.DB_PASSWORD, config.Config.DB_HOST, config.Config.DB_NAME)
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s", config.Config.DBUSERNAME, config.Config.DBPASSWORD, config.Config.DBHOST, config.Config.DBNAME)
 }
 func Connection() (*sql.DB, error) {  
 	db, err := sql.Open("mysql", dsn()) 

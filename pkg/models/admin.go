@@ -4,7 +4,7 @@ import(
 	"LMS/pkg/types"
 )
 
-func AddNewbook(title,author string , copies int) (types.Error,error){
+func AddNewBook(title,author string , copies int) (types.Error,error){
 	var error types.Error
 	db, err := Connection()
 
@@ -30,7 +30,7 @@ func AddNewbook(title,author string , copies int) (types.Error,error){
 	}
 }
 
-func Addbook(title,author string , copies int) (types.Error,error){
+func AddBook(title,author string , copies int) (types.Error,error){
 	var error types.Error
 	db, err := Connection()
 
@@ -39,14 +39,13 @@ func Addbook(title,author string , copies int) (types.Error,error){
 		return error,err
 	}
 	
-		query := "UPDATE books SET count = count + ?, totalcount = totalcount + ? WHERE author = ? AND title= ? "
-		_ = db.QueryRow(query,copies,copies,author,title)
-		error.Msg = "Added Successfully"
-		return error,err
-	
+	query := "UPDATE books SET count = count + ?, totalcount = totalcount + ? WHERE author = ? AND title= ? "
+	_ = db.QueryRow(query,copies,copies,author,title)
+	error.Msg = "Added Successfully"
+	return error,err
 }
 
-func Deletebook(title,author string , copies int) (types.Error,error){
+func DeleteBook(title,author string , copies int) (types.Error,error){
 	var error types.Error
 	db, err := Connection()
 
@@ -81,13 +80,13 @@ func Deletebook(title,author string , copies int) (types.Error,error){
 }
 
 
-func Requestedbooks() (types.RequestLists,error){
+func RequestedBooks() (types.RequestLists,error){
 	db, err := Connection()
-	var requestlist types.RequestLists
+	var requestList types.RequestLists
 
 	if err != nil {
 		log.Printf("Error connecting to database")
-		return requestlist,err
+		return requestList,err
 	}
 	query := "SELECT id,username,bookId FROM requests WHERE status = 'requested'"
 	var requests []types.Request
@@ -95,25 +94,25 @@ func Requestedbooks() (types.RequestLists,error){
 	rows , err := db.Query(query)
 	if err != nil {
 		log.Println(err)
-		return requestlist,err
+		return requestList,err
 	}
 	for rows.Next() {
 		var request types.Request
-		err := rows.Scan(&request.Id , &request.Username,&request.Bookid)
+		err := rows.Scan(&request.Id , &request.Username,&request.BookId)
 		if err != nil {
 			log.Println(err)
-			return requestlist,err
+			return requestList,err
 		}
 		requests = append(requests, request)
 	}
 	defer rows.Close()
 	
-	requestlist.Requests = requests
-	return requestlist,err
+	requestList.Requests = requests
+	return requestList,err
 }
 
 
-func Approvecheckout(Id string) (types.Error,error) {
+func ApproveCheckout(Id string) (types.Error,error) {
 	db, err := Connection()
 	var msg types.Error
 	if err != nil {
@@ -158,7 +157,7 @@ return msg,err
 	
 
 
-func Denycheckout(Id string) (types.Error,error) {
+func DenyCheckout(Id string) (types.Error,error) {
 	db, err := Connection()
 	var msg types.Error
 	msg.Msg = ""
@@ -177,13 +176,13 @@ func Denycheckout(Id string) (types.Error,error) {
 
 
 
-func Checkedinbooks() (types.RequestLists,error){
+func CheckedinBooks() (types.RequestLists,error){
 	db, err := Connection()
-	var requestlist types.RequestLists
+	var requestList types.RequestLists
 
 	if err != nil {
 		log.Printf("Error connecting to database")
-		return requestlist,err
+		return requestList,err
 	}
 	query := "SELECT id,username,bookId FROM requests WHERE status = 'checkin'"
 	var requests []types.Request
@@ -191,25 +190,25 @@ func Checkedinbooks() (types.RequestLists,error){
 	rows , err := db.Query(query)
 	if err != nil {
 		log.Println(err)
-		return requestlist,err
+		return requestList,err
 	}
 	for rows.Next() {
 		var request types.Request
-		err := rows.Scan(&request.Id , &request.Username,&request.Bookid)
+		err := rows.Scan(&request.Id , &request.Username,&request.BookId)
 		if err != nil {
 			log.Println(err)
-			return requestlist,err
+			return requestList,err
 		}
 		requests = append(requests, request)
 	}
 	defer rows.Close()
 	
-	requestlist.Requests = requests
-	return requestlist,err
+	requestList.Requests = requests
+	return requestList,err
 }
 
 
-func Approvecheckin(Id string)error{
+func ApproveCheckin(Id string)error{
 	db, err := Connection()
 
 	if err != nil {
@@ -233,7 +232,7 @@ func Approvecheckin(Id string)error{
 }
 
 
-func Denycheckin(Id string)error{
+func DenyCheckin(Id string)error{
 	db, err := Connection()
 
 	if err != nil {
@@ -281,7 +280,7 @@ func AdminRequestUserIds() (types.Userlist,error){
 }
 
 
-func Approveadminrequest(Id string)error{
+func ApproveAdminRequest(Id string)error{
 	db, err := Connection()
 
 	if err != nil {
@@ -297,7 +296,7 @@ func Approveadminrequest(Id string)error{
 	return err
 }
 
-func Denyadminrequest(Id string)error{
+func DenyAdminRequest(Id string)error{
 	db, err := Connection()
 	log.Println(Id)
 	if err != nil {

@@ -15,7 +15,7 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func Adduser(username, password, confirmpassword string) (types.Error,error) {
+func AddUser(username, password string) (types.Error,error) {
 	var error types.Error
 	db, err := Connection()
 
@@ -38,12 +38,12 @@ func Adduser(username, password, confirmpassword string) (types.Error,error) {
 		error.Msg = "User already exists"
 		return error,err
 	} else {
-		hashedpassword, err := hashPassword(password)
+		hashedPassword, err := hashPassword(password)
 		if err != nil {
 			log.Println(err)
 			return error,err
 		}
-		_, err = db.Exec(`INSERT INTO users (username,hash,admin,adminrequest) VALUES (?, ?, ?,?)`, username, hashedpassword, 0, 0)
+		_, err = db.Exec(`INSERT INTO users (username,hash,admin,adminrequest) VALUES (?, ?, ?,?)`, username, hashedPassword, 0, 0)
 		if err != nil {
 			log.Println(err)
 		} else {

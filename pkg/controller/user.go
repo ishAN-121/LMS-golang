@@ -10,14 +10,14 @@ import (
 	"LMS/pkg/models"
 )
 
-func Userpage(w http.ResponseWriter, r *http.Request){
-	t := views.Userpage()
+func UserPage(w http.ResponseWriter, r *http.Request){
+	t := views.UserPage()
 	var user types.User
 	user.Username = r.Header.Get("username")
 	t.Execute(w,user)
 }
 
-func Checkoutpage(w http.ResponseWriter, r *http.Request){
+func CheckoutPage(w http.ResponseWriter, r *http.Request){
 	db, err := models.Connection()
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
@@ -28,7 +28,7 @@ func Checkoutpage(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
-	t := views.Checkoutpage()
+	t := views.CheckoutPage()
 	var error types.Error
 	var data types.Data
 	data.Books = booksList.Books
@@ -37,8 +37,9 @@ func Checkoutpage(w http.ResponseWriter, r *http.Request){
 }
 
 func Checkout(w http.ResponseWriter, r *http.Request){
+	var request types.Request
 	bookId_str := r.FormValue("bookIds")
-	username := r.Header.Get("username")
+	request.Username = r.Header.Get("username")
 
 	db, err := models.Connection()
 	if err != nil {
@@ -47,8 +48,8 @@ func Checkout(w http.ResponseWriter, r *http.Request){
 	}
 
 	var msg types.Error
-	bookId, _ := strconv.Atoi(bookId_str)
-	msg,err = models.Checkout(username,bookId)
+	request.BookId, _ = strconv.Atoi(bookId_str)
+	msg,err = models.Checkout(request.Username,request.BookId)
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 
@@ -61,15 +62,16 @@ func Checkout(w http.ResponseWriter, r *http.Request){
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = msg.Msg
-	t := views.Checkoutpage()
+	t := views.CheckoutPage()
 	t.Execute(w,data)
 	
 }
 
-func Checkinpage(w http.ResponseWriter, r *http.Request){
-	username := r.Header.Get("username")
-	t := views.Checkinpage()
-	booksList,err:= models.Issuedbooks(username)
+func CheckinPage(w http.ResponseWriter, r *http.Request){
+	var user types.User
+	user.Username = r.Header.Get("username")
+	
+	booksList,err:= models.IssuedBooks(user.Username)
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
@@ -77,32 +79,37 @@ func Checkinpage(w http.ResponseWriter, r *http.Request){
 	var data types.Data
 	data.Books = booksList.Books
 	data.Error = msg.Msg
+	t := views.CheckinPage()
 	t.Execute(w,data)
 }
 
 func Checkin (w http.ResponseWriter, r *http.Request){
+	var request types.Request
 	bookId_str := r.FormValue("bookIds")
-	username := r.Header.Get("username")
+	request.Username = r.Header.Get("username")
+
 	
-	bookId, _ := strconv.Atoi(bookId_str)
-	models.Checkin(username,bookId)
-	Checkinpage(w,r)
+	request.BookId, _ = strconv.Atoi(bookId_str)
+	models.Checkin(request.Username,request.BookId)
+	CheckinPage(w,r)
 }
 
-func Issuedbooks(w http.ResponseWriter, r *http.Request){
-	username := r.Header.Get("username")
-	t := views.Issuedbooks()
-	booksList,err := models.Issuedbooks(username)
+func IssuedBooks(w http.ResponseWriter, r *http.Request){
+	var user types.User
+	user.Username = r.Header.Get("username")
+	
+	booksList,err := models.IssuedBooks(user.Username)
 	if err != nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
+	t := views.IssuedBooks()
 	t.Execute(w,booksList)
 }
 
-func Makeadminrequest(w http.ResponseWriter, r *http.Request){
+func MakeAdminRequest(w http.ResponseWriter, r *http.Request){
 	var user types.User
 	user.Username = r.Header.Get("username")
-	models.Adminrequest(user.Username)
-	t := views.Userpage()
+	models.AdminRequest(user.Username)
+	t := views.UserPage()
 	t.Execute(w,user)
 }

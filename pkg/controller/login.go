@@ -10,7 +10,7 @@ import (
 
 )
 
-func Loginpage(w http.ResponseWriter, r *http.Request){
+func LoginPage(w http.ResponseWriter, r *http.Request){
 	t := views.LoginPage()
 	var err types.Error
 	err.Msg = ""
@@ -18,30 +18,28 @@ func Loginpage(w http.ResponseWriter, r *http.Request){
 }
 
 func Login(w http.ResponseWriter, r *http.Request){
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-	
 	var user types.User
 	var msg types.Error
 	var err error
-	var admin bool
 
-	user.Username = username
+	user.Username = r.FormValue("username")
+	user.Password = r.FormValue("password")
 
-	
-	if (username == "" || password == "" ){
+	if (user.Username == "" || user.Password == "" ){
 		msg.Msg = "Enter all the details"
 	}
-	admin, msg,err = models.Authenticate(w,r,username,password)
+
+	user.Admin, msg,err = models.Authenticate(w,r,user.Username,user.Password)
 	if err !=nil {
 		http.Redirect(w, r, "/serverError", http.StatusFound)
 	}
+
 	if ((msg.Msg != "")&& (msg.Msg != "Login successful")){
 	t := views.LoginPage()
 	t.Execute(w,err)
 	}else{
 
-		if !admin{
+		if !user.Admin{
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 		}else{
 			http.Redirect(w, r, "/admin", http.StatusSeeOther)

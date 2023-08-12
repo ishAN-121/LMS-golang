@@ -15,19 +15,22 @@ func Register(w http.ResponseWriter, r *http.Request){
 	t.Execute(w,err)
 }
 
-func Adduser(w http.ResponseWriter, r *http.Request){
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-	confirmpassword := r.FormValue("confirmpassword")
+func AddUser(w http.ResponseWriter, r *http.Request){
+
 	var msg types.Error
 	var err error
+	var user types.User
+	user.Username = r.FormValue("username")
+	user.Password = r.FormValue("password")
+	confirmPassword := r.FormValue("confirmPassword")
+	
 
-	if (username == "" || password == "" || confirmpassword == ""){
+	if (user.Username == "" || user.Password == "" || confirmPassword == ""){
 		msg.Msg = "Enter all the details"
-	}else if (password != confirmpassword) {
+	}else if (user.Password != confirmPassword) {
 		msg.Msg = "Passwords do not match"
 	}else {
-		msg,err = models.Adduser(username, password, confirmpassword)
+		msg,err = models.AddUser(user.Username, user.Password)
 		if err != nil{
 			http.Redirect(w, r, "/serverError", http.StatusFound)
 		}

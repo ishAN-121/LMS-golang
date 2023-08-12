@@ -7,14 +7,14 @@ import(
 	"gopkg.in/yaml.v3"
 )
 
-func confg() *Dbconfig{
-	configfile, err := ioutil.ReadFile("config.yaml")
+func confg() *DbConfig{
+	configFile, err := ioutil.ReadFile("config.yaml")
 	if err != nil {
         log.Printf("Error in loading yaml file#%v ", err)
     }
 
-	config := &Dbconfig{}
-	err = yaml.Unmarshal(configfile,config)
+	config := &DbConfig{}
+	err = yaml.Unmarshal(configFile,config)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}

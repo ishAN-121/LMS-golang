@@ -8,7 +8,7 @@ import (
 
 )
 
-func Checkout(username string, bookid int) (types.Error , error) {
+func Checkout(username string, bookId int) (types.Error , error) {
 	var msg types.Error
 	db, err := Connection()
 
@@ -18,14 +18,14 @@ func Checkout(username string, bookid int) (types.Error , error) {
 	}
 		var exists bool
 		query := "SELECT 1 FROM requests WHERE bookId = ? AND username = ? AND (status = 'requested' OR status = 'owned')"
-		err = db.QueryRow(query, bookid, username).Scan(&exists)
+		err = db.QueryRow(query, bookId, username).Scan(&exists)
 		fmt.Println(err)
 		if exists {
 			msg.Msg = "Already Requested or Owned"
 			return msg,err
 		} else {
 			query := "INSERT INTO requests (bookId , username , status) VALUES (?,?, 'requested');"
-			_, err = db.Exec(query, bookid, username)
+			_, err = db.Exec(query, bookId, username)
 			if err != nil {
 				log.Println(err)
 			}  else {
@@ -53,7 +53,7 @@ func Checkin(username string, id int) error {
 	return err
 } 
 	
-func Issuedbooks(username string) (types.ListBooks,error) {
+func IssuedBooks(username string) (types.ListBooks,error) {
 	
 	var listBooks types.ListBooks
 	db, err := Connection()
@@ -97,7 +97,7 @@ func Issuedbooks(username string) (types.ListBooks,error) {
 		log.Println(err)
 		return listBooks,err
 	}
-    var fetchissuedBooks []types.Book
+    var fetchIssuedBooks []types.Book
 	for rows.Next() {
 		var book types.Book
 		err := rows.Scan(&book.Id, &book.Title, &book.Author, &book.Copies, &book.Totalcount)
@@ -105,13 +105,13 @@ func Issuedbooks(username string) (types.ListBooks,error) {
 			log.Println(err)
 			return listBooks,err
 		}
-		fetchissuedBooks = append(fetchissuedBooks, book)
+		fetchIssuedBooks = append(fetchIssuedBooks, book)
 	}
-	listBooks.Books = fetchissuedBooks
+	listBooks.Books = fetchIssuedBooks
 	return listBooks,err
 }
 
-func Adminrequest(username string)error{
+func AdminRequest(username string)error{
 	db, err := Connection()
 	if err != nil {
 		log.Printf("error %s connecting to the database", err)

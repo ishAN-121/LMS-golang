@@ -15,25 +15,29 @@
     </nav>
     <div class="full-page center">
     <div class = "position">
-    <h1 class="title">Approve/Deny Admin Request
+    <h1 class="title">Approve/Deny
     </h1></div>
 <table class="table size w-75 table-striped table-hover">
     <thead>
       <tr>
         <th scope="col">Id</th>
+        <th scope="col">BookId</th>
         <th scope="col">Username</th>
+        <th scope="col">Status</th>
         <th scope="col">Approve</th>
         <th scope="col">Deny</th>
       </tr>
     </thead>
     <tbody>
-        {{range .Users}}
+        {{range .Requests}}
       <tr>
         <th scope="row">{{.Id}}</th>
+        <td>{{.BookId}}</td>
         <td>{{.Username}}</td>
-        <td><form action="/approveadminrequest" method="POST">  <input type="hidden" name="userids" value="{{.Id}}"class="form-control"/>
+        <td>Checkin</td>
+        <td><form action="/approveCheckin" method="POST">  <input type="hidden" name="requestIds" value="{{.Id}}"class="form-control"/>
         <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Accept </button></form></td>
-        <td><form action="/denyadminrequest" method="POST">  <input type="hidden" name="userids" value="{{.Id}}"class="form-control"/>
+        <td><form action="/denyCheckin" method="POST">  <input type="hidden" name="requestIds" value="{{.Id}}"class="form-control"/>
             <button class=" btn btn-outline-primary btn-sm m-1"type="submit"> Deny </button></form></td>
             
         

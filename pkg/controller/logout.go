@@ -3,19 +3,20 @@ package controller
 import (
 	"net/http"
 	"LMS/pkg/models"
-	"log"
+	"LMS/pkg/types"
 )
 
 func Logout(w http.ResponseWriter, r *http.Request){
-	username := r.Header.Get("username")
-	log.Println(username)
+	var user types.User
+	user.Username = r.Header.Get("username")
+
 	cookie := http.Cookie{
-		Name:     "SessionID",
+		Name:     "sessionId",
 		Value:    "",
 		MaxAge:    -1,    
 		HttpOnly: true, 
 	}
 	http.SetCookie(w,&cookie)
-	models.Logout(username)
+	models.Logout(user.Username)
 	http.Redirect(w, r, "/", http.StatusFound)
 }

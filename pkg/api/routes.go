@@ -12,46 +12,46 @@ func Start(){
 	s := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets")))
 	r.PathPrefix("/assets/").Handler(s)
 
-	//Middleware_direct methods
+	//MiddleWareDirect methods
 
-	r.HandleFunc("/",controller.Middleware_direct(controller.Welcome)).Methods("GET")
+	r.HandleFunc("/",controller.MiddlewareDirect(controller.Welcome)).Methods("GET")
 	r.HandleFunc("/register",controller.Register).Methods("GET")
-	r.HandleFunc("/login",controller.Middleware_direct(controller.Loginpage)).Methods("GET")
+	r.HandleFunc("/login",controller.MiddlewareDirect(controller.LoginPage)).Methods("GET")
 
-	r.HandleFunc("/register",controller.Adduser).Methods("POST")
-	r.HandleFunc("/login",controller.Middleware_direct(controller.Login)).Methods("POST") 
+	r.HandleFunc("/register",controller.AddUser).Methods("POST")
+	r.HandleFunc("/login",controller.MiddlewareDirect(controller.Login)).Methods("POST") 
 
 	//Middleware methods
 
-	r.HandleFunc("/user",controller.Middleware(controller.Userpage)).Methods("GET")
+	r.HandleFunc("/user",controller.Middleware(controller.UserPage)).Methods("GET")
 	r.HandleFunc("/books",controller.Middleware(controller.Books)).Methods("GET")
-	r.HandleFunc("/checkout", controller.Middleware(controller.Checkoutpage)).Methods("GET")
-	r.HandleFunc("/checkin", controller.Middleware(controller.Checkinpage)).Methods("GET")
-	r.HandleFunc("/issuedbooks", controller.Middleware(controller.Issuedbooks)).Methods("GET")
-	r.HandleFunc("/makeadminrequest", controller.Middleware(controller.Makeadminrequest)).Methods("GET")
+	r.HandleFunc("/checkout", controller.Middleware(controller.CheckoutPage)).Methods("GET")
+	r.HandleFunc("/checkin", controller.Middleware(controller.CheckinPage)).Methods("GET")
+	r.HandleFunc("/issuedBooks", controller.Middleware(controller.IssuedBooks)).Methods("GET")
+	r.HandleFunc("/makeAdminRequest", controller.Middleware(controller.MakeAdminRequest)).Methods("GET")
 	r.HandleFunc("/logout", controller.Middleware(controller.Logout)).Methods("GET")
 
 	r.HandleFunc("/checkout", controller.Middleware(controller.Checkout)).Methods("POST")
 	r.HandleFunc("/checkin", controller.Middleware(controller.Checkin)).Methods("POST")
 
-	//MIddleWare and Is_admin methods
+	//MIddleWare and IsAdmin methods
 
-	r.HandleFunc("/admin",controller.Middleware(controller.Is_admin((controller.Adminpage)))).Methods("GET")
-	r.HandleFunc("/addnewbook",controller.Middleware(controller.Is_admin((controller.AddNewBookPage)))).Methods("GET")
-	r.HandleFunc("/admin-checkout",controller.Middleware(controller.Is_admin((controller.Admincheckout)))).Methods("GET")
-	r.HandleFunc("/admin-checkin",controller.Middleware(controller.Is_admin((controller.Admincheckin)))).Methods("GET")
-	r.HandleFunc("/adminrequest",controller.Middleware(controller.Is_admin((controller.Adminrequest)))).Methods("GET")
-	r.HandleFunc("/adddeletebook",controller.Middleware(controller.Is_admin((controller.AddDeleteBookPage)))).Methods("GET")
+	r.HandleFunc("/admin",controller.Middleware(controller.IsAdmin((controller.AdminPage)))).Methods("GET")
+	r.HandleFunc("/addNewBook",controller.Middleware(controller.IsAdmin((controller.AddNewBookPage)))).Methods("GET")
+	r.HandleFunc("/adminCheckout",controller.Middleware(controller.IsAdmin((controller.AdminCheckout)))).Methods("GET")
+	r.HandleFunc("/adminCheckin",controller.Middleware(controller.IsAdmin((controller.AdminCheckin)))).Methods("GET")
+	r.HandleFunc("/adminRequest",controller.Middleware(controller.IsAdmin((controller.AdminRequest)))).Methods("GET")
+	r.HandleFunc("/updateBookPage",controller.Middleware(controller.IsAdmin((controller.UpdateBookPage)))).Methods("GET")
 	
-	r.HandleFunc("/addnewbook",controller.Middleware(controller.Is_admin((controller.AddNewBook)))).Methods("POST")
-	r.HandleFunc("/update-add",controller.Middleware(controller.Is_admin((controller.Addbook)))).Methods("POST")
-	r.HandleFunc("/update-delete",controller.Middleware(controller.Is_admin((controller.Deletebook)))).Methods("POST")
-	r.HandleFunc("/approve-checkout",controller.Middleware(controller.Is_admin((controller.Approvecheckout)))).Methods("POST")
-	r.HandleFunc("/deny-checkout",controller.Middleware(controller.Is_admin((controller.Denycheckout)))).Methods("POST")
-	r.HandleFunc("/approve-checkin",controller.Middleware(controller.Is_admin((controller.Approvecheckin)))).Methods("POST")
-	r.HandleFunc("/deny-checkin",controller.Middleware(controller.Is_admin((controller.Denycheckin)))).Methods("POST")
-	r.HandleFunc("/approveadminrequest",controller.Middleware(controller.Is_admin((controller.Approveadminrequest)))).Methods("POST")
-	r.HandleFunc("/denyadminrequest",controller.Middleware(controller.Is_admin((controller.Denyadminrequest)))).Methods("POST")
+	r.HandleFunc("/addNewBook",controller.Middleware(controller.IsAdmin((controller.AddNewBook)))).Methods("POST")
+	r.HandleFunc("/addBook",controller.Middleware(controller.IsAdmin((controller.AddBook)))).Methods("POST")
+	r.HandleFunc("/deleteBook",controller.Middleware(controller.IsAdmin((controller.DeleteBook)))).Methods("POST")
+	r.HandleFunc("/approveCheckout",controller.Middleware(controller.IsAdmin((controller.ApproveCheckout)))).Methods("POST")
+	r.HandleFunc("/denyCheckout",controller.Middleware(controller.IsAdmin((controller.DenyCheckout)))).Methods("POST")
+	r.HandleFunc("/approveCheckin",controller.Middleware(controller.IsAdmin((controller.ApproveCheckin)))).Methods("POST")
+	r.HandleFunc("/denyCheckin",controller.Middleware(controller.IsAdmin((controller.DenyCheckin)))).Methods("POST")
+	r.HandleFunc("/approveAdminRequest",controller.Middleware(controller.IsAdmin((controller.ApproveAdminRequest)))).Methods("POST")
+	r.HandleFunc("/denyAdminRequest",controller.Middleware(controller.IsAdmin((controller.DenyAdminRequest)))).Methods("POST")
 
 
 	r.HandleFunc("/serverError",controller.ServerError).Methods("GET")
